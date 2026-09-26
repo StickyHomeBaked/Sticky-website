@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sticky Home Baked Goodness</title>
+<link rel="icon" href="logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Yellowtail&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper: #FBF3E1;
+    --beige: #EDE4CF;
+    --ink: #3B2317;
+    --ink-soft: #7C6A57;
+    --line: rgba(59,35,23,0.16);
+    --gold: #C48C97;
+    --gold-soft: rgba(196,140,151,0.22);
+    --teal: #00AEB7;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Jost', sans-serif;
+    font-size:17px;
+    line-height:1.65;
+    font-weight:400;
+  }
+  h1,h2,h3{
+    font-family:'Cormorant Garamond', serif;
+    font-weight:500;
+    margin:0;
+    color:var(--ink);
+  }
+  .eyebrow{
+    font-family:'Jost',sans-serif; font-size:0.78rem; font-weight:600;
+    letter-spacing:0.18em; text-transform:uppercase; color:var(--gold);
+  }
+  a{color:inherit;}
+  img{max-width:100%;display:block;}
+
+  a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible{
+    outline:2px solid var(--teal);
+    outline-offset:3px;
+  }
+
+  .rule{ width:56px; height:1px; background:var(--gold); border:none; margin:18px 0; }
+  .rule-full{ height:1px; background:var(--line); border:none; margin:0; }
+
+  /* ---------- Buttons ---------- */
+  .btn{
+    display:inline-block; padding:14px 30px;
+    text-decoration:none; font-size:0.82rem; text-transform:uppercase; letter-spacing:0.14em; font-weight:500;
+    border:1px solid var(--teal); transition:all .2s ease; text-align:center;
+  }
+  .btn-solid{background:var(--teal); color:var(--paper);}
+  .btn-solid:hover{background:transparent; color:var(--teal);}
+  .btn-outline{background:transparent; color:var(--teal); border-color:var(--teal);}
+  .btn-outline:hover{background:var(--teal); color:var(--paper);}
+
+  /* ================= Page frame: sidebar + flowing content ================= */
+  .page{
+    display:flex; align-items:flex-start;
+    max-width:1440px; margin:0 auto;
+  }
+
+  .sidebar{
+    width:300px; flex-shrink:0;
+    position:sticky; top:0; height:100vh;
+    padding:48px 34px;
+    display:flex; flex-direction:column;
+    background:var(--beige);
+    border-right:1px solid var(--line);
+  }
+  .brand{ display:flex; align-items:center; gap:12px; text-decoration:none; }
+  .brand img{width:56px; height:56px; border-radius:50%;}
+  .brand span{font-family:'Yellowtail',cursive; font-style:normal; font-size:2rem; color:var(--ink);}
+  .side-tagline{ color:var(--ink-soft); font-size:0.9rem; margin:16px 0 0; }
+
+  .side-nav{ display:flex; flex-direction:column; gap:14px; margin:36px 0; list-style:none; padding:0; }
+  .side-nav a{
+    text-decoration:none; color:var(--ink); font-size:0.85rem;
+    text-transform:uppercase; letter-spacing:0.12em; font-weight:500;
+    position:relative; padding-left:0; transition:padding-left .2s ease, color .2s ease;
+  }
+  .side-nav a::before{ content:"—"; color:var(--gold); margin-right:8px; opacity:0; transition:opacity .2s ease; }
+  .cart-badge{
+    display:inline-flex; align-items:center; justify-content:center;
+    min-width:18px; height:18px; padding:0 5px; margin-left:8px;
+    border-radius:999px; background:var(--teal); color:var(--paper);
+    font-size:0.68rem; font-weight:700; letter-spacing:0; vertical-align:middle;
+  }
+  .cart-badge-on-btn{ background:var(--paper); color:var(--teal); }
+
+  .floating-cart{
+    position:fixed; top:22px; right:28px; z-index:60;
+    width:48px; height:48px; border-radius:50%; background:var(--teal); color:var(--paper);
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 6px 18px rgba(59,35,23,0.22); text-decoration:none;
+    transition:transform .15s ease;
+  }
+  .floating-cart:hover{ transform:scale(1.07); }
+  .floating-cart svg{ width:21px; height:21px; }
+  .cart-badge-float{
+    position:absolute; top:-5px; right:-5px; margin-left:0;
+    background:var(--gold); color:var(--paper); border:2px solid var(--paper);
+  }
+  @media (max-width:900px){
+    .floating-cart{ top:auto; bottom:22px; right:22px; }
+  }
+  .side-nav a:hover, .side-nav a:focus-visible{ color:var(--gold); padding-left:2px; }
+  .side-nav a:hover::before, .side-nav a:focus-visible::before{ opacity:1; }
+
+  .side-contact{ display:flex; flex-direction:column; gap:12px; margin-bottom:28px; }
+  .side-contact .info-line{ display:flex; gap:10px; align-items:flex-start; font-size:0.85rem; color:var(--ink-soft); }
+  .side-contact svg{ width:15px; height:15px; margin-top:3px; color:var(--teal); flex-shrink:0; }
+
+  .sidebar .btn{ margin-top:auto; margin-bottom:20px; }
+  .side-copyright{ font-size:0.72rem; color:var(--ink-soft); opacity:0.7; }
+
+  .menu-toggle{ display:none; }
+
+  @media (max-width:900px){
+    .page{ flex-direction:column; }
+    .sidebar{
+      width:100%; height:auto; position:relative;
+      border-right:none; border-bottom:1px solid var(--line);
+      flex-direction:row; flex-wrap:wrap; align-items:center; justify-content:space-between;
+      padding:18px 24px; gap:0;
+    }
+    .side-tagline{ display:none; }
+    .side-nav, .side-contact, .sidebar .btn, .side-copyright{
+      display:none;
+      width:100%;
+    }
+    .sidebar.open .side-nav, .sidebar.open .side-contact, .sidebar.open .btn, .sidebar.open .side-copyright{
+      display:flex;
+    }
+    .sidebar.open .side-contact{ flex-direction:column; }
+    .sidebar.open{ flex-direction:column; align-items:stretch; }
+    .menu-toggle{
+      display:block; background:none; border:0; cursor:pointer; padding:6px; color:var(--ink);
+      order:2;
+    }
+    .menu-toggle svg{ width:24px; height:24px; }
+  }
+
+  /* ---------- Content column ---------- */
+  .content{ flex:1; min-width:0; padding:0 56px; }
+  @media (max-width:900px){ .content{ padding:0 24px; } }
+
+  section{ padding:72px 0; }
+  #top.hero{
+    padding-top:88px; padding-bottom:64px; position:relative; overflow:hidden;
+    margin-left:-56px; padding-left:56px;
+    margin-right:-56px; padding-right:56px;
+  }
+  #top.hero::before{
+    content:""; position:absolute; inset:0; z-index:0;
+    background-image:linear-gradient(to right, rgba(30,20,12,0.55), rgba(30,20,12,0.25)), url('photos/sticky-date-original.jpg');
+    background-size:cover; background-position:center top;
+  }
+  #top.hero::after{
+    content:""; position:absolute; inset:0; z-index:0;
+    background-image:linear-gradient(to bottom, transparent 88%, var(--paper) 99%);
+  }
+  #top.hero .hero-inner{ position:relative; z-index:1; }
+  #top.hero .eyebrow{ color:#F2C9DA; }
+  #top.hero h1{ color:#FBF3E1; }
+  #top.hero .logo-script{ color:#FBF3E1; }
+  #top.hero p.lede{ color:rgba(251,243,225,0.9); }
+  #top.hero .btn-outline{ color:#FBF3E1; border-color:#FBF3E1; }
+  #top.hero .btn-outline:hover{ background:#FBF3E1; color:var(--ink); }
+  .hero-menu-lead{
+    position:relative; z-index:1; margin-top:52px; padding-top:36px;
+    border-top:1px solid rgba(251,243,225,0.3);
+  }
+  #top.hero .hero-menu-lead .eyebrow{ color:#F2C9DA; text-shadow:0 1px 4px rgba(20,12,6,0.35); }
+  #top.hero .hero-menu-lead h2{ color:#FBF3E1; text-shadow:0 1px 6px rgba(20,12,6,0.3); }
+  #top.hero .hero-menu-lead p{ color:rgba(251,243,225,0.95); text-shadow:0 1px 4px rgba(20,12,6,0.3); }
+  @media (max-width:900px){
+    #top.hero{ margin-left:-24px; padding-left:24px; margin-right:-24px; padding-right:24px; }
+  }
+
+  .section-head{max-width:56ch; margin-bottom:48px;}
+  .section-head h2{font-size:clamp(2rem,3.4vw,2.7rem); font-style:italic; margin-top:10px;}
+  .section-head p{margin-top:16px; color:var(--ink-soft);}
+
+  /* ---------- Hero ---------- */
+  .hero-inner{ display:grid; grid-template-columns:1.2fr 0.8fr; gap:56px; align-items:center; }
+  .hero h1{
+    font-size:clamp(1.9rem, 2.6vw, 2.7rem);
+    font-style:italic;
+    line-height:1.15;
+    margin-top:14px;
+    white-space:nowrap;
+  }
+  .logo-script{
+    font-family:'Yellowtail', cursive;
+    font-style:normal;
+    color:var(--ink);
+  }
+  .hero p.lede{
+    margin-top:22px; font-size:1.06rem; max-width:48ch; color:var(--ink-soft);
+  }
+  .hero-actions{display:flex; gap:18px; margin-top:34px; flex-wrap:wrap;}
+  .hero-art{display:flex; justify-content:center; position:relative;}
+  .hero-art img{width:min(320px, 92%); position:relative; z-index:1;}
+  .hero-art::before{
+    content:""; position:absolute; width:340px; height:340px; border-radius:50%;
+    border:1px solid var(--gold-soft); top:50%; left:50%; transform:translate(-50%,-50%);
+  }
+  @media (max-width:820px){
+    .hero-inner{grid-template-columns:1fr; gap:32px;}
+    .hero-art{order:-1;}
+    .hero-art img{width:205px;}
+    .hero-art::before{width:220px; height:220px;}
+    .hero h1{white-space:normal; font-size:clamp(1.9rem, 6vw, 2.6rem);}
+  }
+
+  /* ---------- About (flows straight on from hero, no block change) ---------- */
+  .about-grid{display:grid; grid-template-columns:0.75fr 1.25fr; gap:56px; align-items:start;}
+  .about-figure{
+    aspect-ratio:1/1; overflow:hidden;
+    border:6px solid var(--beige); box-shadow:0 0 0 1px var(--gold-soft);
+    border-radius:50%; margin-top:8px;
+  }
+  .about-figure img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .about-copy p{margin:0 0 18px; color:var(--ink-soft);}
+  .about-copy p:first-child{font-size:1.1rem; color:var(--ink); font-style:italic; font-family:'Cormorant Garamond',serif; font-weight:500;}
+  .stat-row{display:flex; gap:44px; margin-top:28px; flex-wrap:wrap;}
+  .stat b{display:block; font-family:'Cormorant Garamond',serif; font-style:italic; font-size:2.1rem; font-weight:500; color:var(--ink);}
+  .stat span{font-size:0.76rem; color:var(--ink-soft); text-transform:uppercase; letter-spacing:0.08em;}
+  @media (max-width:700px){ .about-grid{grid-template-columns:1fr;} .about-figure{max-width:200px;} }
+
+  /* ---------- Menu ---------- */
+  .menu-cols{ display:block; max-width:860px; }
+  .menu-cols > div + div{ margin-top:48px; }
+  .menu-group-title{ font-size:1.9rem; font-style:italic; font-weight:700; color:var(--ink); margin:0 0 6px; }
+  .menu-group-note{ color:var(--ink-soft); font-size:0.95rem; margin:0 0 26px; }
+  .menu-item{
+    display:grid; grid-template-columns:140px 1fr auto; gap:28px; align-items:center;
+    padding:30px 0; border-bottom:1px solid var(--line);
+  }
+  .menu-thumb{ width:140px; height:140px; border-radius:8px; overflow:hidden; background:var(--paper); }
+  .menu-thumb img{ width:100%; height:100%; object-fit:cover; display:block; filter:saturate(0.92) brightness(0.96); }
+  .menu-thumb-empty{ background:transparent; }
+  .menu-item:first-of-type{border-top:1px solid var(--line);}
+  .menu-item h3{font-size:1.5rem; font-weight:700; font-style:italic; color:var(--ink);}
+  .menu-item p{margin:7px 0 0; color:var(--ink-soft); font-size:1.02rem;}
+  .menu-item .price{font-family:'Cormorant Garamond',serif; font-style:italic; font-weight:500; font-size:1.55rem; color:var(--gold); white-space:nowrap;}
+  .price-row{ display:flex; flex-direction:column; align-items:flex-end; gap:9px; }
+  .add-cart-btn{
+    font-family:'Jost',sans-serif; font-size:0.72rem; text-transform:uppercase; letter-spacing:0.08em; font-weight:600;
+    padding:7px 14px; border:1px solid var(--teal); color:var(--teal); background:transparent;
+    cursor:pointer; border-radius:2px; white-space:nowrap; transition:all .15s ease;
+  }
+  .add-cart-btn:hover{ background:var(--teal); color:var(--paper); }
+  .add-cart-btn.added{ background:var(--teal); color:var(--paper); }
+  .diet-select{
+    display:inline-block; margin-top:11px; margin-right:18px; font-family:'Jost',sans-serif; font-size:0.82rem;
+    text-transform:uppercase; letter-spacing:0.08em; font-weight:500;
+    padding:4px 22px 4px 0; border:none; border-bottom:1px solid var(--line);
+    background:transparent; color:var(--ink-soft); border-radius:0; cursor:pointer;
+  }
+  .diet-select:focus{ border-bottom-color:var(--teal); color:var(--ink); }
+  .diet-select option{ background:var(--paper); color:var(--ink); text-transform:none; }
+  @media (max-width:640px){
+    .menu-item{grid-template-columns:90px 1fr; }
+    .price-row{grid-column:2; margin-top:8px; flex-direction:row; align-items:center; justify-content:space-between;}
+  }
+
+  /* ---------- Gallery ---------- */
+  .gallery-grid{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:2px;
+    background:var(--line); border:1px solid var(--line);
+  }
+  .gallery-tile{
+    position:relative; aspect-ratio:4/5; overflow:hidden; background:var(--paper);
+  }
+  .gallery-tile img{
+    width:100%; height:100%; object-fit:cover; display:block;
+    filter:saturate(0.92) brightness(0.96);
+    transition:transform .5s ease;
+  }
+  .gallery-tile:hover img{ transform:scale(1.05); }
+  .gallery-tile .cap{
+    position:absolute; left:0; right:0; bottom:0; padding:16px 12px 12px;
+    background:linear-gradient(to top, rgba(255,255,255,0.95), rgba(255,255,255,0));
+  }
+  .gallery-tile .cap span{font-family:'Cormorant Garamond',serif; font-style:italic; font-size:0.92rem; text-align:center; color:var(--ink); display:block;}
+  @media (max-width:900px){ .gallery-grid{grid-template-columns:repeat(3,1fr);} }
+  @media (max-width:600px){ .gallery-grid{grid-template-columns:repeat(2,1fr);} }
+
+  /* ---------- Order ---------- */
+  .cart-box{
+    max-width:680px; border:1px solid var(--line); border-radius:6px;
+    padding:26px 28px; margin-bottom:36px; background:var(--beige);
+  }
+  .cart-title{ font-size:1.3rem; font-style:italic; margin-bottom:14px; }
+  .cart-empty{ color:var(--ink-soft); font-size:0.92rem; }
+  .cart-item{
+    padding:16px 0; border-bottom:1px solid var(--line);
+  }
+  .cart-item:first-child{ border-top:1px solid var(--line); }
+  .cart-item-header{
+    display:flex; align-items:center; justify-content:space-between; gap:14px;
+  }
+  .cart-item-name{ font-family:'Cormorant Garamond',serif; font-style:italic; font-weight:600; font-size:1.08rem; }
+  .cart-item-price{ color:var(--ink-soft); font-size:0.88rem; margin-top:2px; }
+  .cart-item-controls{ display:flex; align-items:center; gap:10px; }
+  .cart-qty-btn{
+    width:24px; height:24px; border:1px solid var(--line); background:var(--paper); color:var(--ink);
+    cursor:pointer; font-size:0.9rem; line-height:1; border-radius:3px;
+  }
+  .cart-qty-btn:hover{ border-color:var(--teal); color:var(--teal); }
+  .cart-qty{ min-width:16px; text-align:center; font-size:0.92rem; }
+  .cart-remove{
+    background:none; border:none; color:var(--ink-soft); cursor:pointer; font-size:0.78rem;
+    text-transform:uppercase; letter-spacing:0.06em; text-decoration:underline;
+  }
+  .cart-remove:hover{ color:var(--gold); }
+  .cart-item-options{
+    display:grid; grid-template-columns:1fr 1fr; gap:14px 24px;
+    margin-top:16px; padding-top:16px; border-top:1px dashed var(--line);
+  }
+  .cart-item-options .opt-field{ display:grid; gap:6px; }
+  .cart-item-options .opt-field.full{ grid-column:1 / -1; }
+  .cart-item-options label.opt-label{
+    font-size:0.7rem; text-transform:uppercase; letter-spacing:0.08em; font-weight:500; color:var(--ink-soft);
+  }
+  .cart-item-options input[type="date"], .cart-item-options input[type="text"]{
+    font-family:'Jost',sans-serif; font-size:0.9rem; padding:7px 2px; border:none;
+    border-bottom:1px solid var(--line); background:transparent; color:var(--ink);
+  }
+  .cart-item-options input:focus{ border-bottom-color:var(--teal); }
+  .cart-item-options .checkbox-row{ gap:16px; margin-top:2px; }
+  .addon-list{ display:flex; flex-direction:column; gap:9px; margin-top:4px; }
+  .addon-line{
+    display:flex; align-items:center; justify-content:space-between; gap:14px;
+    font-size:0.9rem; font-weight:400; text-transform:none; letter-spacing:normal; color:var(--ink); cursor:pointer;
+  }
+  .addon-line input{ width:15px; height:15px; accent-color:var(--teal); cursor:pointer; margin-right:8px; }
+  .addon-price{ color:var(--ink-soft); font-size:0.82rem; font-style:italic; white-space:nowrap; }
+  .cart-item-options .checkbox-option{ font-size:0.86rem; }
+  @media (max-width:560px){ .cart-item-options{ grid-template-columns:1fr; } }
+  .cart-subtotal{
+    display:flex; justify-content:space-between; align-items:center;
+    padding-top:16px; margin-top:6px; font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1.2rem;
+  }
+  form{display:grid; gap:20px; max-width:560px;}
+  .field{display:grid; gap:8px;}
+  label{font-size:0.74rem; text-transform:uppercase; letter-spacing:0.1em; font-weight:500; color:var(--ink-soft);}
+  input, select, textarea{
+    font-family:'Jost',sans-serif; font-size:1rem;
+    padding:10px 2px; border:none; border-bottom:1px solid var(--line);
+    background:transparent; color:var(--ink); border-radius:0;
+  }
+  input:focus, select:focus, textarea:focus{ border-bottom-color:var(--teal); }
+  textarea{resize:vertical; min-height:88px;}
+  .two-col{display:grid; grid-template-columns:1fr 1fr; gap:20px;}
+  @media (max-width:560px){ .two-col{grid-template-columns:1fr;} }
+  .checkbox-row{ display:flex; gap:26px; flex-wrap:wrap; margin-top:4px; }
+  .checkbox-option{
+    display:flex; align-items:center; gap:8px;
+    font-size:0.95rem; font-weight:400; text-transform:none; letter-spacing:normal;
+    color:var(--ink); cursor:pointer;
+  }
+  .checkbox-option input{ width:16px; height:16px; accent-color:var(--teal); cursor:pointer; }
+  form .btn{cursor:pointer; justify-self:start; margin-top:6px;}
+  .form-note{font-size:0.8rem; color:var(--ink-soft);}
+  .checkout-note{
+    background:var(--beige); border:1px solid var(--line); border-radius:6px;
+    padding:16px 18px; font-size:0.9rem; color:var(--ink); line-height:1.5;
+  }
+
+  select option{ background:var(--paper); color:var(--ink); }
+</style>
+</head>
+<body>
+
+<a href="#order" class="floating-cart" aria-label="View cart">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1.4"/><circle cx="19" cy="21" r="1.4"/><path d="M2 3h2l2.6 12.6a2 2 0 0 0 2 1.6h8.8a2 2 0 0 0 2-1.6L21 8H6"/></svg>
+  <span id="cartBadgeFloat" class="cart-badge cart-badge-float" style="display:none;"></span>
+</a>
+
+<div class="page">
+
+  <aside class="sidebar" id="sidebar">
+    <div style="display:flex; align-items:center; justify-content:space-between; width:100%;">
+      <a class="brand" href="#top">
+        <img src="logo.png" alt="Sticky Home Baked Goodness logo">
+        <span>Sticky</span>
+      </a>
+      <button class="menu-toggle" aria-label="Toggle navigation" aria-expanded="false" id="menuToggle">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+    </div>
+    <p class="side-tagline">North Shore Sydney &mdash; home baked, always sticky.</p>
+
+    <ul class="side-nav">
+      <li><a href="#menu">Menu</a></li>
+      <li><a href="#gallery">Gallery</a></li>
+      <li><a href="#order">Order<span id="cartBadge" class="cart-badge" style="display:none;"></span></a></li>
+      <li><a href="#about">Our story</a></li>
+    </ul>
+
+    <div class="side-contact">
+      <div class="info-line">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 4h16v16H4z" stroke-linejoin="round"/><path d="M4 6l8 7 8-7"/></svg>
+        <span><a href="mailto:stickyhomebaked@gmail.com" style="color:inherit; text-decoration:none;">stickyhomebaked@gmail.com</a></span>
+      </div>
+      <div class="info-line">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.7a2 2 0 0 1-.4 2.1L8 9.9a16 16 0 0 0 6 6l1.4-1.4a2 2 0 0 1 2.1-.4c.9.3 1.8.5 2.7.6a2 2 0 0 1 1.8 2Z"/></svg>
+        <span><a href="tel:0403207894" style="color:inherit; text-decoration:none;">0403 207 894</a></span>
+      </div>
+      <div class="info-line">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 21s7-6.3 7-12a7 7 0 1 0-14 0c0 5.7 7 12 7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg>
+        <span>Kurraba Point</span>
+      </div>
+    </div>
+
+    <a class="btn btn-solid" href="#order">Order a cake<span id="cartBadgeBtn" class="cart-badge cart-badge-on-btn" style="display:none;"></span></a>
+    <span class="side-copyright">© 2026 Sticky Home Baked Goodness</span>
+  </aside>
+
+  <main class="content">
+
+    <section class="hero" id="top">
+      <div class="hero-inner">
+        <div>
+          <div class="eyebrow">Comfort first, fondant never</div>
+          <h1>Home Baked Goodness, always <span class="logo-script">Sticky</span>.</h1>
+          <p class="lede">Baking comforting, homemade cakes — simple, delicious, and made to be shared. Our signature Sticky Date Cake with rich butterscotch sauce and fresh whipped cream, alongside a collection of honest home baked favourites. Made fresh in small batches for pickup or delivery across Sydney.</p>
+          <div class="hero-actions">
+            <a class="btn btn-solid" href="#menu">See the menu</a>
+            <a class="btn btn-outline" href="#order">Order a cake</a>
+          </div>
+        </div>
+        <div class="hero-art">
+          <img src="logo.png" alt="Sticky Home Baked Goodness logo, a teal badge with a slice of drip cake">
+        </div>
+      </div>
+
+      <div class="section-head hero-menu-lead">
+        <div class="eyebrow">The menu</div>
+        <h2>Baked this week</h2>
+        <p>No fondant, no fuss — just properly good cake, made to share. Every cake below serves 8–10 people. Custom cakes for events are always welcome — see the order form below.</p>
+      </div>
+    </section>
+
+    <section id="menu">
+      <div class="menu-cols">
+        <div>
+          <h3 class="menu-group-title">Sticky Date Cakes</h3>
+          <p class="menu-group-note">Serves 8–10</p>
+          <div class="menu-item">
+            <div class="menu-thumb"><img src="photos/sticky-date-original.jpg" alt="The Original"></div>
+            <div><h3>The Original</h3><p>Sticky Date Cake with butterscotch sauce and fresh whipped cream.</p><select class="diet-select" aria-label="Dietary option for The Original"><option>Standard</option><option>Gluten Free</option><option>Dairy Free</option></select></div>
+            <div class="price-row"><div class="price">A$70</div><button type="button" class="add-cart-btn" data-name="The Original" data-price="70">Add to Cart</button></div>
+          </div>
+          <div class="menu-item">
+            <div class="menu-thumb"><img src="photos/sticky-date-nutty.jpg" alt="Nutty"></div>
+            <div><h3>Nutty</h3><p>Sticky Date Cake topped with roasted pecans and hazelnuts, butterscotch sauce and fresh whipped cream.</p><select class="diet-select" aria-label="Dietary option for Nutty"><option>Standard</option><option>Gluten Free</option><option>Dairy Free</option></select></div>
+            <div class="price-row"><div class="price">A$80</div><button type="button" class="add-cart-btn" data-name="Nutty" data-price="80">Add to Cart</button></div>
+          </div>
+          <div class="menu-item">
+            <div class="menu-thumb"><img src="photos/spiced-pear.jpg" alt="Spiced Sticky Date Cake topped with spiced pears and whipped cream"></div>
+            <div><h3>Spiced</h3><p>Sticky Date Cake with hints of cinnamon, topped with spiced pears, butterscotch sauce and fresh whipped cream.</p><select class="diet-select" aria-label="Dietary option for Spiced"><option>Standard</option><option>Gluten Free</option><option>Dairy Free</option></select></div>
+            <div class="price-row"><div class="price">A$80</div><button type="button" class="add-cart-btn" data-name="Spiced" data-price="80">Add to Cart</button></div>
+          </div>
+          <div class="menu-item">
+            <div class="menu-thumb menu-thumb-empty"></div>
+            <div><h3>Crumble</h3><p>Sticky date cake topped with a buttery crumble, butterscotch sauce and fresh whipped cream.</p><select class="diet-select" aria-label="Dietary option for Crumble"><option>Standard</option><option>Gluten Free</option><option>Dairy Free</option></select></div>
+            <div class="price-row"><div class="price">A$80</div><button type="button" class="add-cart-btn" data-name="Crumble" data-price="80">Add to Cart</button></div>
+          </div>
+          <div class="menu-item">
+            <div class="menu-thumb"><img src="photos/mini-sticky-date.jpg" alt="Individual mini Sticky Date Cakes topped with roasted nuts and rose petals"></div>
+            <div><h3>Mini Sticky Date Cakes</h3><p>Our signature Sticky Date Cake, baked as individual sized cakes with butterscotch sauce and fresh cream. Perfect for dinner parties. (Minimum order 6)</p><select class="diet-select" aria-label="Dietary option for Mini Sticky Date Cakes"><option>Standard</option><option>Gluten Free</option><option>Dairy Free</option></select></div>
+            <div class="price-row"><div class="price">A$6 each</div><button type="button" class="add-cart-btn" data-name="Mini Sticky Date Cakes" data-price="6">Add to Cart</button></div>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="menu-group-title">Home Baked Favourites</h3>
+          <p class="menu-group-note">Serves 8–10</p>
+          <div class="menu-item">
+            <div class="menu-thumb"><img src="photos/carrot-walnut.jpg" alt="Spiced Carrot &amp; Walnut Cake"></div>
+            <div><h3>Spiced Carrot &amp; Walnut Cake</h3><p>With whipped cream cheese topping.</p><select class="diet-select" aria-label="Dietary option for Spiced Carrot &amp; Walnut Cake"><option>Standard</option><option>Gluten Free</option><option>Dairy Free</option></select></div>
+            <div class="price-row"><div class="price">A$70</div><button type="button" class="add-cart-btn" data-name="Spiced Carrot & Walnut Cake" data-price="70">Add to Cart</button></div>
+          </div>
+          <div class="menu-item">
+            <div class="menu-thumb"><img src="photos/gooey-chocolate.jpg" alt="Gooey Chocolate Cake"></div>
+            <div><h3>Gooey Chocolate Cake</h3><p>Served with strawberries and fresh whipped cream.</p><select class="diet-select" aria-label="Dietary option for Gooey Chocolate Cake"><option>Standard</option><option>Gluten Free</option><option>Dairy Free</option></select></div>
+            <div class="price-row"><div class="price">A$70</div><button type="button" class="add-cart-btn" data-name="Gooey Chocolate Cake" data-price="70">Add to Cart</button></div>
+          </div>
+          <div class="menu-item">
+            <div class="menu-thumb"><img src="photos/raspberry-cake.jpg" alt="Rich White Chocolate &amp; Raspberry Cake"></div>
+            <div><h3>Rich White Chocolate &amp; Raspberry Cake</h3><p>With a side of raspberry sauce and fresh cream.</p><select class="diet-select" aria-label="Dietary option for Rich White Chocolate &amp; Raspberry Cake"><option>Standard</option><option>Gluten Free</option><option>Dairy Free</option></select></div>
+            <div class="price-row"><div class="price">A$70</div><button type="button" class="add-cart-btn" data-name="Rich White Chocolate & Raspberry Cake" data-price="70">Add to Cart</button></div>
+          </div>
+          <div class="menu-item">
+            <div class="menu-thumb"><img src="photos/hummingbird.jpg" alt="Tropical Pineapple Banana Hummingbird Cake with cream cheese frosting and passionfruit sauce"></div>
+            <div><h3>Tropical Pineapple Banana (Hummingbird)</h3><p>Cream cheese topping, passionfruit sauce.</p><select class="diet-select" aria-label="Dietary option for Tropical Pineapple Banana (Hummingbird)"><option>Standard</option><option>Gluten Free</option><option>Dairy Free</option></select></div>
+            <div class="price-row"><div class="price">A$70</div><button type="button" class="add-cart-btn" data-name="Tropical Pineapple Banana (Hummingbird)" data-price="70">Add to Cart</button></div>
+          </div>
+          <div class="menu-item">
+            <div class="menu-thumb menu-thumb-empty"></div>
+            <div><h3>The Lumberjack</h3><p>Moist date and apple cake with a sweet caramelised coconut topping.</p><select class="diet-select" aria-label="Dietary option for The Lumberjack"><option>Standard</option><option>Gluten Free</option><option>Dairy Free</option></select></div>
+            <div class="price-row"><div class="price">A$70</div><button type="button" class="add-cart-btn" data-name="The Lumberjack" data-price="70">Add to Cart</button></div>
+          </div>
+          <div class="menu-item">
+            <div class="menu-thumb"><img src="photos/gift-box.jpg" alt="Gift Box packaging with a plated slice of cake and a Happy Birthday balloon"></div>
+            <div><h3>Gift Box</h3><p>One generous slice of cake, with a side of sauce and fresh cream, in a gift box.</p><select class="diet-select" aria-label="Dietary option for Gift Box"><option>Standard</option><option>Gluten Free</option><option>Dairy Free</option></select></div>
+            <div class="price-row"><div class="price">A$15</div><button type="button" class="add-cart-btn" data-name="Gift Box" data-price="15">Add to Cart</button></div>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="menu-group-title">Extras</h3>
+          <p class="menu-group-note">Add a little something extra to any order</p>
+          <div class="menu-item">
+            <div class="menu-thumb menu-thumb-empty"></div>
+            <div><h3>Balloon</h3><p>A birthday or celebration balloon to go with your cake.</p></div>
+            <div class="price-row"><div class="price">Price TBC</div><button type="button" class="add-cart-btn" data-name="Balloon">Add to Cart</button></div>
+          </div>
+          <div class="menu-item">
+            <div class="menu-thumb menu-thumb-empty"></div>
+            <div><h3>Card</h3><p>A handwritten greeting card added to your order.</p></div>
+            <div class="price-row"><div class="price">Price TBC</div><button type="button" class="add-cart-btn" data-name="Card">Add to Cart</button></div>
+          </div>
+          <div class="menu-item">
+            <div class="menu-thumb menu-thumb-empty"></div>
+            <div><h3>Flowers</h3><p>A small fresh flower bunch to accompany your cake.</p></div>
+            <div class="price-row"><div class="price">Price TBC</div><button type="button" class="add-cart-btn" data-name="Flowers">Add to Cart</button></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="rule-full">
+
+    <section id="gallery">
+      <div class="section-head">
+        <div class="eyebrow">From the kitchen</div>
+        <h2>A few recent bakes</h2>
+        <p>Every cake looks a little different — here's a taste of what's been coming out of the oven lately.</p>
+      </div>
+      <div class="gallery-grid">
+        <div class="gallery-tile">
+          <img src="photos/sticky-date-original.jpg" alt="The Original Sticky Date Cake with butterscotch sauce being poured over it">
+          <div class="cap"><span>The Original Sticky Date</span></div>
+        </div>
+        <div class="gallery-tile">
+          <img src="photos/sticky-date-nutty.jpg" alt="Nutty Sticky Date Cake topped with roasted pecans, hazelnuts and walnuts">
+          <div class="cap"><span>Nutty Sticky Date</span></div>
+        </div>
+        <div class="gallery-tile">
+          <img src="photos/gooey-chocolate.jpg" alt="Gooey Chocolate Cake topped with strawberries">
+          <div class="cap"><span>Gooey Chocolate Cake</span></div>
+        </div>
+        <div class="gallery-tile">
+          <img src="photos/carrot-walnut.jpg" alt="Spiced Carrot and Walnut Cake with cream cheese icing and chopped walnuts">
+          <div class="cap"><span>Spiced Carrot &amp; Walnut Cake</span></div>
+        </div>
+        <div class="gallery-tile">
+          <img src="photos/raspberry-cake.jpg" alt="Cake topped with fresh raspberries and mint, dusted with icing sugar">
+          <div class="cap"><span>Rich White Chocolate &amp; Raspberry Cake</span></div>
+        </div>
+        <div class="gallery-tile">
+          <img src="photos/spiced-pear.jpg" alt="Spiced Sticky Date Cake topped with spiced pears and whipped cream">
+          <div class="cap"><span>Spiced Sticky Date</span></div>
+        </div>
+        <div class="gallery-tile">
+          <img src="photos/gift-box.jpg" alt="Gift Box packaging with a plated slice of cake and a Happy Birthday balloon">
+          <div class="cap"><span>Gift Box orders</span></div>
+        </div>
+        <div class="gallery-tile">
+          <img src="photos/hummingbird.jpg" alt="Tropical Pineapple Banana Hummingbird Cake with cream cheese frosting and passionfruit sauce">
+          <div class="cap"><span>Tropical Hummingbird</span></div>
+        </div>
+        <div class="gallery-tile">
+          <img src="photos/raspberry-tier-cake.jpg" alt="Two-tier cake with fresh cream and raspberries">
+          <div class="cap"><span>Custom Celebration Cake</span></div>
+        </div>
+        <div class="gallery-tile">
+          <img src="photos/chocolate-strawberry-boxed.jpg" alt="Gooey Chocolate Cake topped with strawberries, boxed for delivery">
+          <div class="cap"><span>Packaged &amp; ready to go</span></div>
+        </div>
+        <div class="gallery-tile">
+          <img src="photos/heart-strawberry-cake.jpg" alt="Heart-shaped chocolate cake topped with heart-cut strawberries">
+          <div class="cap"><span>Custom Heart Cake</span></div>
+        </div>
+        <div class="gallery-tile">
+          <img src="photos/pear-flower-cake.jpg" alt="Sticky date cake topped with poached pears arranged in a flower pattern">
+          <div class="cap"><span>Poached Pear Sticky Date</span></div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="rule-full">
+
+    <section id="order">
+      <div class="section-head">
+        <div class="eyebrow">Get in touch</div>
+        <h2>Order a cake</h2>
+        <p>Add cakes to your cart from the menu above — you can set the date, pickup or delivery, and any add-ons for each one right there. Weekly menu items need 24 hours' notice. Custom cakes need at least 72 hours.</p>
+      </div>
+
+      <div class="cart-box">
+        <h3 class="cart-title">Your cart</h3>
+        <div id="cartEmpty" class="cart-empty">No cakes added yet — use the "Add to Cart" button on any cake in the menu above.</div>
+        <div id="cartItems"></div>
+        <div id="cartSubtotal" class="cart-subtotal" style="display:none;"></div>
+      </div>
+
+      <form aria-label="Cake order form" id="orderForm">
+        <div class="two-col">
+          <div class="field">
+            <label for="name">Name</label>
+            <input id="name" name="name" type="text" required>
+          </div>
+          <div class="field">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" required>
+          </div>
+        </div>
+        <div class="field">
+          <label for="phone">Phone (optional)</label>
+          <input id="phone" name="phone" type="tel" placeholder="04XX XXX XXX">
+        </div>
+        <div class="field">
+          <label for="message">Anything else?</label>
+          <textarea id="message" name="message" placeholder="Flavours, allergies, size, occasion, custom cake enquiry..."></textarea>
+        </div>
+        <div class="checkout-note">
+          Once you check out, you'll be taken to a secure Square payment page to pay by card. A receipt is emailed to you automatically.
+        </div>
+        <button class="btn btn-solid" type="submit">Checkout</button>
+      </form>
+    </section>
+
+    <hr class="rule-full">
+
+    <section id="about">
+      <div class="about-grid">
+        <div class="about-figure">
+          <img src="photos/mixed-nut-drizzle.jpg" alt="Sticky date cake topped with mixed roasted nuts and caramel drizzle">
+        </div>
+        <div class="about-copy">
+          <div class="eyebrow">Our story</div>
+          <p>Sticky Home Baked Goodness started in one kitchen with one loaf tin, a lot of honey, and a habit of never quite waiting for cakes to cool before cutting in.</p>
+          <p>We're not a fondant shop. There's no airbrushing, no sugar flowers, no cake that takes three days to decorate before anyone's tasted a bite of it. Every order is still mixed by hand in small batches — usually no more than eight cakes a week — using real butter, local honey, and slow-cooked caramel instead of shortcuts. The whole point is flavour and comfort, not a showpiece.</p>
+          <div class="stat-row">
+            <div class="stat"><b>6+</b><span>Years baking to order</span></div>
+            <div class="stat"><b>8</b><span>Cakes made per week, max</span></div>
+            <div class="stat"><b>0</b><span>Shortcuts taken</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+</div>
+
+<script>
+  const sidebar = document.getElementById('sidebar');
+  const toggle = document.getElementById('menuToggle');
+  toggle.addEventListener('click', () => {
+    const isOpen = sidebar.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', isOpen);
+  });
+  sidebar.querySelectorAll('.side-nav a').forEach(a => a.addEventListener('click', () => {
+    sidebar.classList.remove('open');
+    toggle.setAttribute('aria-expanded', 'false');
+  }));
+
+  // ---------- Reliable in-page anchor scrolling ----------
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', function(e){
+      const id = this.getAttribute('href').slice(1);
+      const target = document.getElementById(id);
+      if (target){
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+
+  // ---------- Cart ----------
+  let cart = [];
+
+  function addToCart(btn){
+    const name = btn.dataset.name;
+    const price = btn.dataset.price ? parseFloat(btn.dataset.price) : null;
+    const existing = cart.find(i => i.name === name);
+    if (existing) { existing.qty += 1; }
+    else { cart.push({ name, price, qty: 1, date: '', fulfilment: 'Pickup', address: '', addons: [] }); }
+    renderCart();
+    btn.classList.add('added');
+    btn.textContent = 'Added ✓';
+    setTimeout(() => { btn.classList.remove('added'); btn.textContent = 'Add to Cart'; }, 1200);
+  }
+
+  // Delegated click handler covers every "Add to Cart" button, even ones
+  // rendered after page load, and works in environments that block inline
+  // onclick attributes.
+  document.addEventListener('click', (e) => {
+    const addBtn = e.target.closest('.add-cart-btn');
+    if (addBtn){ addToCart(addBtn); return; }
+
+    const qtyBtn = e.target.closest('.cart-qty-btn');
+    if (qtyBtn){
+      const index = parseInt(qtyBtn.dataset.index, 10);
+      const delta = parseInt(qtyBtn.dataset.delta, 10);
+      cart[index].qty += delta;
+      if (cart[index].qty <= 0) cart.splice(index, 1);
+      renderCart();
+      return;
+    }
+
+    const removeBtn = e.target.closest('.cart-remove');
+    if (removeBtn){
+      const index = parseInt(removeBtn.dataset.index, 10);
+      cart.splice(index, 1);
+      renderCart();
+      return;
+    }
+  });
+
+  // Delegated input/change handlers for the per-item fields rendered inside #cartItems
+  document.addEventListener('input', (e) => {
+    const field = e.target.dataset.field;
+    if (field && e.target.closest('#cartItems')){
+      const index = parseInt(e.target.dataset.index, 10);
+      cart[index][field] = e.target.value;
+    }
+  });
+
+  document.addEventListener('change', (e) => {
+    if (!e.target.closest('#cartItems')) return;
+
+    if (e.target.name && e.target.name.startsWith('fulfilment-')){
+      const index = parseInt(e.target.dataset.index, 10);
+      cart[index].fulfilment = e.target.value;
+      const addrEl = document.getElementById('deliveryAddr-' + index);
+      if (addrEl) addrEl.style.display = e.target.value === 'Delivery' ? 'block' : 'none';
+      return;
+    }
+
+    if (e.target.matches('.addon-line input[type="checkbox"]')){
+      const index = parseInt(e.target.dataset.index, 10);
+      const value = e.target.dataset.addon;
+      const addons = cart[index].addons;
+      if (e.target.checked){ if (!addons.includes(value)) addons.push(value); }
+      else { cart[index].addons = addons.filter(a => a !== value); }
+    }
+  });
+
+  function renderCart(){
+    const emptyEl = document.getElementById('cartEmpty');
+    const itemsEl = document.getElementById('cartItems');
+    const subtotalEl = document.getElementById('cartSubtotal');
+
+    const totalCount = cart.reduce((sum, i) => sum + i.qty, 0);
+    [document.getElementById('cartBadge'), document.getElementById('cartBadgeBtn'), document.getElementById('cartBadgeFloat')].forEach(badge => {
+      if (!badge) return;
+      if (totalCount > 0){ badge.textContent = totalCount; badge.style.display = 'inline-flex'; }
+      else { badge.style.display = 'none'; }
+    });
+
+    if (cart.length === 0){
+      emptyEl.style.display = 'block';
+      itemsEl.innerHTML = '';
+      subtotalEl.style.display = 'none';
+      return;
+    }
+
+    emptyEl.style.display = 'none';
+    let subtotal = 0;
+    let hasTBC = false;
+
+    const addonNames = ['Balloon', 'Card', 'Flowers', 'Happy Birthday Sign', 'Extra Butterscotch Sauce', 'Extra Cream'];
+
+    itemsEl.innerHTML = cart.map((item, i) => {
+      let priceLabel;
+      if (item.price === null){
+        priceLabel = 'Price TBC';
+        hasTBC = true;
+      } else {
+        subtotal += item.price * item.qty;
+        priceLabel = `A$${item.price} each`;
+      }
+      const addonChecked = (val) => item.addons.includes(val) ? 'checked' : '';
+      const addonRows = addonNames.map(name =>
+        `<label class="addon-line"><span><input type="checkbox" data-index="${i}" data-addon="${name}" ${addonChecked(name)}> ${name}</span><span class="addon-price">Price TBC</span></label>`
+      ).join('');
+      return `<div class="cart-item">
+        <div class="cart-item-header">
+          <div>
+            <div class="cart-item-name">${item.name}</div>
+            <div class="cart-item-price">${priceLabel}</div>
+          </div>
+          <div class="cart-item-controls">
+            <button type="button" class="cart-qty-btn" data-index="${i}" data-delta="-1" aria-label="Decrease quantity">–</button>
+            <span class="cart-qty">${item.qty}</span>
+            <button type="button" class="cart-qty-btn" data-index="${i}" data-delta="1" aria-label="Increase quantity">+</button>
+            <button type="button" class="cart-remove" data-index="${i}">Remove</button>
+          </div>
+        </div>
+        <div class="cart-item-options">
+          <div class="opt-field">
+            <label class="opt-label" for="itemDate-${i}">Needed by</label>
+            <input id="itemDate-${i}" type="date" value="${item.date}" data-field="date" data-index="${i}">
+          </div>
+          <div class="opt-field">
+            <label class="opt-label">Pickup or delivery?</label>
+            <div class="checkbox-row">
+              <label class="checkbox-option"><input type="radio" name="fulfilment-${i}" data-index="${i}" value="Pickup" ${item.fulfilment === 'Pickup' ? 'checked' : ''}> Pickup</label>
+              <label class="checkbox-option"><input type="radio" name="fulfilment-${i}" data-index="${i}" value="Delivery" ${item.fulfilment === 'Delivery' ? 'checked' : ''}> Delivery</label>
+            </div>
+          </div>
+          <div class="opt-field full" id="deliveryAddr-${i}" style="display:${item.fulfilment === 'Delivery' ? 'block' : 'none'};">
+            <label class="opt-label" for="itemAddr-${i}">Delivery address</label>
+            <input id="itemAddr-${i}" type="text" placeholder="Street, suburb, postcode" value="${item.address}" data-field="address" data-index="${i}">
+          </div>
+          <div class="opt-field full">
+            <label class="opt-label">Add anything extra?</label>
+            <div class="addon-list">
+              ${addonRows}
+            </div>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+
+    subtotalEl.style.display = 'flex';
+    subtotalEl.innerHTML = `<span>Subtotal</span><span>A$${subtotal}${hasTBC ? ' + items TBC' : ''}</span>`;
+  }
+
+  document.getElementById('orderForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    if (cart.length === 0){
+      alert('Your cart is empty — add a cake from the menu above before checking out.');
+      return;
+    }
+
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const notes = document.getElementById('message').value.trim();
+
+    // The cart lets each cake have its own pickup/delivery choice, but one
+    // order can only ship to one place — so if anything in the cart asked
+    // for delivery, the whole order is treated as a delivery.
+    const deliveryItem = cart.find((i) => i.fulfilment === 'Delivery');
+
+    const payload = {
+      items: cart.map((i) => ({
+        name: i.name,
+        quantity: i.qty,
+        note: [
+          i.date ? `Needed by ${i.date}` : null,
+          i.addons.length ? `Add-ons: ${i.addons.join(', ')}` : null,
+        ].filter(Boolean).join(' | '),
+      })),
+      customer: { name, email, phone, notes },
+      fulfilment: {
+        type: deliveryItem ? 'Delivery' : 'Pickup',
+        address: deliveryItem ? deliveryItem.address : null,
+      },
+    };
+
+    // So the confirmation page can show what was ordered once the customer
+    // is sent back here after paying.
+    sessionStorage.setItem('stickyLastOrder', JSON.stringify({ items: cart, name, email }));
+
+    const submitBtn = document.querySelector('#orderForm button[type="submit"]');
+    const originalLabel = submitBtn.textContent;
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Redirecting to secure checkout…';
+
+    try {
+      const res = await fetch('/api/create-checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert(data.error || 'Something went wrong creating your checkout. Please try again or contact us directly.');
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalLabel;
+        return;
+      }
+
+      window.location.href = data.checkoutUrl;
+    } catch (err) {
+      alert('Could not reach the checkout server. Please try again, or contact us directly.');
+      submitBtn.disabled = false;
+      submitBtn.textContent = originalLabel;
+    }
+  });
+</script>
+
+
+
+</body>
+</html>

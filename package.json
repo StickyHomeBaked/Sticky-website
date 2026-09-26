@@ -1,0 +1,7 @@
+{
+  "name": "sticky-home-baked-goodness",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Website + Square checkout backend for Sticky Home Baked Goodness"
+}
