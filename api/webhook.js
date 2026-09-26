@@ -63,11 +63,14 @@ export default async function handler(req, res) {
     return res.status(400).send('Bad payload');
   }
 
-  if (event.type === 'payment.updated') {
-    const payment = event.data?.object?.payment;
-    if (payment?.status === 'COMPLETED') {
-      await notifyOwnerOfPaidOrder(payment);
-    }
+  // Log every event we receive — even when we don't act on it — so we can
+  // actually see what Square is sending instead of guessing.
+  const payment = event.data?.object?.payment;
+  console.log('Square webhook received:', event.type, '| payment status:', payment?.status);
+
+  if ((event.type === 'payment.updated' || event.type === 'payment.created') && payment?.status === 'COMPLETED') {
+    await notifyOwnerOfPaidOrder(payment);
+    console.log('Payment-confirmed email attempted for payment', payment.id);
   }
 
   // Square just needs a 200 response to know we received it.
@@ -99,9 +102,11 @@ async function notifyOwnerOfPaidOrder(payment) {
       }),
     });
 
+    const responseText = await response.text();
     if (!response.ok) {
-      const errText = await response.text();
-      console.error('Resend rejected the email:', response.status, errText);
+      console.error('Resend rejected the email:', response.status, responseText);
+    } else {
+      console.log('Resend accepted the email:', responseText);
     }
   } catch (err) {
     console.error('Could not send the payment-confirmed email:', err);
