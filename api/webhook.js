@@ -80,17 +80,29 @@ export default async function handler(req, res) {
 // database later if you want order history on the website itself.
 async function notifyOwnerOfPaidOrder(payment) {
   try {
-    await fetch('https://formsubmit.co/ajax/stickyhomebaked@gmail.com', {
+    const response = await fetch('https://api.resend.com/emails', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify({
-        _subject: 'Payment confirmed — Sticky Home Baked Goodness',
-        'Payment ID': payment.id,
-        'Order ID': payment.order_id || 'n/a',
-        Amount: `${(payment.amount_money.amount / 100).toFixed(2)} ${payment.amount_money.currency}`,
-        Status: payment.status,
+        from: 'Sticky Home Baked Goodness <onboarding@resend.dev>',
+        to: ['stickyhomebaked@gmail.com'],
+        subject: 'Payment confirmed — Sticky Home Baked Goodness',
+        text: [
+          `Payment ID: ${payment.id}`,
+          `Order ID: ${payment.order_id || 'n/a'}`,
+          `Amount: ${(payment.amount_money.amount / 100).toFixed(2)} ${payment.amount_money.currency}`,
+          `Status: ${payment.status}`,
+        ].join('\n'),
       }),
     });
+
+    if (!response.ok) {
+      const errText = await response.text();
+      console.error('Resend rejected the email:', response.status, errText);
+    }
   } catch (err) {
     console.error('Could not send the payment-confirmed email:', err);
   }
