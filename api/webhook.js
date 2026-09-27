@@ -7,6 +7,12 @@
 
 import crypto from 'crypto';
 
+const SQUARE_ENVIRONMENT = process.env.SQUARE_ENVIRONMENT || 'sandbox';
+const SQUARE_BASE_URL =
+  SQUARE_ENVIRONMENT === 'production'
+    ? 'https://connect.squareup.com'
+    : 'https://connect.squareupsandbox.com';
+
 // Vercel normally parses the request body into JSON automatically. We turn
 // that off here because Square's signature check needs the exact raw text
 // of the request — re-serialised JSON is not guaranteed to match it.
@@ -69,19 +75,76 @@ export default async function handler(req, res) {
   console.log('Square webhook received:', event.type, '| payment status:', payment?.status);
 
   if ((event.type === 'payment.updated' || event.type === 'payment.created') && payment?.status === 'COMPLETED') {
-    await notifyOwnerOfPaidOrder(payment);
-    console.log('Payment-confirmed email attempted for payment', payment.id);
+    // The payment itself doesn't carry the cake names/quantities — those
+    // live on the Order we created at checkout. Square is the source of
+    // truth here, so we fetch the order back from Square rather than
+    // trusting anything the browser might have kept locally.
+    const order = payment.order_id ? await fetchOrderDetails(payment.order_id) : null;
+    await notifyOwnerOfPaidOrder(payment, order);
+    console.log('Order-confirmed email attempted for payment', payment.id);
   }
 
   // Square just needs a 200 response to know we received it.
   return res.status(200).send('ok');
 }
 
-// v1: email you the second a payment is confirmed, instead of setting up a
-// full database. This still satisfies "only mark paid after Square confirms" —
-// it just means your inbox is the record for now. We can add a proper
-// database later if you want order history on the website itself.
-async function notifyOwnerOfPaidOrder(payment) {
+async function fetchOrderDetails(orderId) {
+  try {
+    const response = await fetch(`${SQUARE_BASE_URL}/v2/orders/${orderId}`, {
+      headers: {
+        Authorization: `Bearer ${process.env.SQUARE_ACCESS_TOKEN}`,
+        'Square-Version': '2024-10-17',
+      },
+    });
+    if (!response.ok) {
+      console.error('Could not fetch order details:', response.status, await response.text());
+      return null;
+    }
+    const data = await response.json();
+    return data.order || null;
+  } catch (err) {
+    console.error('Error fetching order details:', err);
+    return null;
+  }
+}
+
+function formatMoney(moneyObj) {
+  if (!moneyObj) return 'n/a';
+  return `A$${(moneyObj.amount / 100).toFixed(2)}`;
+}
+
+// v1: email you the actual order — items, customer details, pickup/delivery,
+// preferred time, notes — the moment a payment is confirmed, instead of
+// setting up a full database. This still satisfies "only mark paid after
+// Square confirms" — it just means your inbox is the record for now. We can
+// add a proper database later if you want order history on the website itself.
+async function notifyOwnerOfPaidOrder(payment, order) {
+  const lines = [];
+
+  if (order?.note) {
+    lines.push('Customer & order details:');
+    order.note.split(' | ').forEach((part) => lines.push(`  ${part}`));
+    lines.push('');
+  }
+
+  if (Array.isArray(order?.line_items) && order.line_items.length) {
+    lines.push('Items ordered:');
+    order.line_items.forEach((item) => {
+      const each = formatMoney(item.base_price_money);
+      const lineTotal = formatMoney(item.total_money);
+      const noteSuffix = item.note ? ` — ${item.note}` : '';
+      lines.push(`  ${item.quantity} × ${item.name} (${each} each, ${lineTotal} total)${noteSuffix}`);
+    });
+    lines.push('');
+  } else {
+    lines.push('(Could not retrieve item details from Square — check the order directly in your Square dashboard.)');
+    lines.push('');
+  }
+
+  lines.push(`Total paid: ${formatMoney(payment.amount_money)}`);
+  lines.push(`Payment ID: ${payment.id}`);
+  lines.push(`Order ID: ${payment.order_id || 'n/a'}`);
+
   try {
     const response = await fetch('https://api.resend.com/emails', {
       method: 'POST',
@@ -92,13 +155,8 @@ async function notifyOwnerOfPaidOrder(payment) {
       body: JSON.stringify({
         from: 'Sticky Home Baked Goodness <onboarding@resend.dev>',
         to: ['stickyhomebaked@gmail.com'],
-        subject: 'Payment confirmed — Sticky Home Baked Goodness',
-        text: [
-          `Payment ID: ${payment.id}`,
-          `Order ID: ${payment.order_id || 'n/a'}`,
-          `Amount: ${(payment.amount_money.amount / 100).toFixed(2)} ${payment.amount_money.currency}`,
-          `Status: ${payment.status}`,
-        ].join('\n'),
+        subject: 'New paid order — Sticky Home Baked Goodness',
+        text: lines.join('\n'),
       }),
     });
 
@@ -109,6 +167,6 @@ async function notifyOwnerOfPaidOrder(payment) {
       console.log('Resend accepted the email:', responseText);
     }
   } catch (err) {
-    console.error('Could not send the payment-confirmed email:', err);
+    console.error('Could not send the order-confirmed email:', err);
   }
 }
