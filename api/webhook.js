@@ -120,10 +120,22 @@ function formatMoney(moneyObj) {
 // add a proper database later if you want order history on the website itself.
 async function notifyOwnerOfPaidOrder(payment, order) {
   const lines = [];
+  const meta = order?.metadata || {};
 
-  if (order?.note) {
+  const detailLines = [
+    meta.customer_name ? `Name: ${meta.customer_name}` : null,
+    meta.customer_email ? `Email: ${meta.customer_email}` : null,
+    meta.customer_phone ? `Phone: ${meta.customer_phone}` : null,
+    meta.fulfilment_type ? `Fulfilment: ${meta.fulfilment_type}` : null,
+    meta.delivery_address ? `Address: ${meta.delivery_address}` : null,
+    meta.date_needed ? `Date needed: ${meta.date_needed}` : null,
+    meta.preferred_time ? `${meta.preferred_time_label || 'Preferred time'}: ${meta.preferred_time}` : null,
+    meta.customer_notes ? `Notes: ${meta.customer_notes}` : null,
+  ].filter(Boolean);
+
+  if (detailLines.length) {
     lines.push('Customer & order details:');
-    order.note.split(' | ').forEach((part) => lines.push(`  ${part}`));
+    detailLines.forEach((line) => lines.push(`  ${line}`));
     lines.push('');
   }
 
