@@ -71,6 +71,7 @@ export default async function handler(req, res) {
     // for and how to reach them, right inside Square's own dashboard.
     const orderNote = [
       customer?.name ? `Name: ${customer.name}` : null,
+      customer?.email ? `Email: ${customer.email}` : null,
       customer?.phone ? `Phone: ${customer.phone}` : null,
       fulfilment?.type ? `Fulfilment: ${fulfilment.type}` : null,
       fulfilment?.type === 'Delivery' && fulfilment?.address ? `Address: ${fulfilment.address}` : null,
