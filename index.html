@@ -324,23 +324,6 @@
     text-transform:uppercase; letter-spacing:0.06em; text-decoration:underline;
   }
   .cart-remove:hover{ color:var(--gold); }
-  .cart-item-options{
-    display:grid; grid-template-columns:1fr 1fr; gap:14px 24px;
-    margin-top:16px; padding-top:16px; border-top:1px dashed var(--line);
-  }
-  .cart-item-options .opt-field{ display:grid; gap:6px; }
-  .cart-item-options .opt-field.full{ grid-column:1 / -1; }
-  .cart-item-options label.opt-label{
-    font-size:0.7rem; text-transform:uppercase; letter-spacing:0.08em; font-weight:500; color:var(--ink-soft);
-  }
-  .cart-item-options input[type="date"], .cart-item-options input[type="text"]{
-    font-family:'Jost',sans-serif; font-size:0.9rem; padding:7px 2px; border:none;
-    border-bottom:1px solid var(--line); background:transparent; color:var(--ink);
-  }
-  .cart-item-options input:focus{ border-bottom-color:var(--teal); }
-  .cart-item-options .checkbox-row{ gap:16px; margin-top:2px; }
-  .cart-item-options .checkbox-option{ font-size:0.86rem; }
-  @media (max-width:560px){ .cart-item-options{ grid-template-columns:1fr; } }
   .cart-subtotal{
     display:flex; justify-content:space-between; align-items:center;
     padding-top:16px; margin-top:6px; font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1.2rem;
@@ -627,6 +610,10 @@
           <input id="phone" name="phone" type="tel" placeholder="04XX XXX XXX">
         </div>
         <div class="field">
+          <label for="dateNeeded">Date needed</label>
+          <input id="dateNeeded" name="dateNeeded" type="date">
+        </div>
+        <div class="field">
           <label>Pickup or delivery?</label>
           <div class="checkbox-row">
             <label class="checkbox-option"><input type="radio" name="fulfilment" value="Pickup" checked> Pickup — Kurraba Point</label>
@@ -638,7 +625,7 @@
           <input id="deliveryAddress" name="deliveryAddress" type="text" placeholder="Street, suburb, postcode">
         </div>
         <div class="field">
-          <label for="preferredTime">Preferred time (optional)</label>
+          <label for="preferredTime" id="preferredTimeLabel">Collection time (optional)</label>
           <input id="preferredTime" name="preferredTime" type="text" placeholder="e.g. Morning, or 2:00 PM">
         </div>
         <div class="field">
@@ -691,8 +678,11 @@
   // ---------- Pickup / delivery toggle (one choice for the whole order) ----------
   document.querySelectorAll('input[name="fulfilment"]').forEach((radio) => {
     radio.addEventListener('change', () => {
-      document.getElementById('deliveryAddressField').style.display =
-        radio.value === 'Delivery' && radio.checked ? 'block' : 'none';
+      const isDelivery = radio.value === 'Delivery' && radio.checked;
+      document.getElementById('deliveryAddressField').style.display = isDelivery ? 'block' : 'none';
+      document.getElementById('preferredTimeLabel').textContent = isDelivery
+        ? 'Requested delivery time (optional)'
+        : 'Collection time (optional)';
     });
   });
 
@@ -716,7 +706,7 @@
     const price = btn.dataset.price ? parseFloat(btn.dataset.price) : null;
     const existing = cart.find(i => i.name === name);
     if (existing) { existing.qty += 1; }
-    else { cart.push({ name, price, qty: 1, date: '' }); }
+    else { cart.push({ name, price, qty: 1 }); }
     renderCart();
     btn.classList.add('added');
     btn.textContent = 'Added ✓';
@@ -746,15 +736,6 @@
       cart.splice(index, 1);
       renderCart();
       return;
-    }
-  });
-
-  // Delegated input handler for the per-item fields rendered inside #cartItems
-  document.addEventListener('input', (e) => {
-    const field = e.target.dataset.field;
-    if (field && e.target.closest('#cartItems')){
-      const index = parseInt(e.target.dataset.index, 10);
-      cart[index][field] = e.target.value;
     }
   });
 
@@ -803,12 +784,6 @@
             <button type="button" class="cart-remove" data-index="${i}">Remove</button>
           </div>
         </div>
-        <div class="cart-item-options">
-          <div class="opt-field">
-            <label class="opt-label" for="itemDate-${i}">Needed by</label>
-            <input id="itemDate-${i}" type="date" value="${item.date}" data-field="date" data-index="${i}">
-          </div>
-        </div>
       </div>`;
     }).join('');
 
@@ -828,6 +803,7 @@
     const email = document.getElementById('email').value.trim();
     const phone = document.getElementById('phone').value.trim();
     const notes = document.getElementById('message').value.trim();
+    const dateNeeded = document.getElementById('dateNeeded').value;
     const fulfilmentType = document.querySelector('input[name="fulfilment"]:checked').value;
     const deliveryAddress = document.getElementById('deliveryAddress').value.trim();
     const preferredTime = document.getElementById('preferredTime').value.trim();
@@ -841,12 +817,12 @@
       items: cart.map((i) => ({
         name: i.name,
         quantity: i.qty,
-        note: i.date ? `Needed by ${i.date}` : '',
       })),
       customer: { name, email, phone, notes },
       fulfilment: {
         type: fulfilmentType,
         address: fulfilmentType === 'Delivery' ? deliveryAddress : null,
+        dateNeeded: dateNeeded || null,
         preferredTime: preferredTime || null,
       },
     };
