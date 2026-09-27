@@ -67,30 +67,32 @@ export default async function handler(req, res) {
 
     const idempotencyKey = randomUUID();
 
-    // A plain-text note attached to the Square order so you can see who it's
-    // for and how to reach them, right inside Square's own dashboard.
-    const orderNote = [
-      customer?.name ? `Name: ${customer.name}` : null,
-      customer?.email ? `Email: ${customer.email}` : null,
-      customer?.phone ? `Phone: ${customer.phone}` : null,
-      fulfilment?.type ? `Fulfilment: ${fulfilment.type}` : null,
-      fulfilment?.type === 'Delivery' && fulfilment?.address ? `Address: ${fulfilment.address}` : null,
-      fulfilment?.dateNeeded ? `Date needed: ${fulfilment.dateNeeded}` : null,
-      fulfilment?.preferredTime
-        ? `${fulfilment.type === 'Delivery' ? 'Requested delivery time' : 'Collection time'}: ${fulfilment.preferredTime}`
-        : null,
-      customer?.notes ? `Notes: ${customer.notes}` : null,
-    ]
-      .filter(Boolean)
-      .join(' | ')
-      .slice(0, 500);
+    // Square's Payment Links endpoint doesn't reliably keep a free-text
+    // order note, so instead we store each piece of customer/fulfilment
+    // information as its own metadata field on the order — metadata is
+    // part of the core Order object and comes back intact when we fetch
+    // the order later in the webhook.
+    const metadata = {};
+    if (customer?.name) metadata.customer_name = String(customer.name).slice(0, 250);
+    if (customer?.email) metadata.customer_email = String(customer.email).slice(0, 250);
+    if (customer?.phone) metadata.customer_phone = String(customer.phone).slice(0, 250);
+    if (fulfilment?.type) metadata.fulfilment_type = String(fulfilment.type).slice(0, 250);
+    if (fulfilment?.type === 'Delivery' && fulfilment?.address) {
+      metadata.delivery_address = String(fulfilment.address).slice(0, 250);
+    }
+    if (fulfilment?.dateNeeded) metadata.date_needed = String(fulfilment.dateNeeded).slice(0, 250);
+    if (fulfilment?.preferredTime) {
+      metadata.preferred_time_label = fulfilment.type === 'Delivery' ? 'Requested delivery time' : 'Collection time';
+      metadata.preferred_time = String(fulfilment.preferredTime).slice(0, 250);
+    }
+    if (customer?.notes) metadata.customer_notes = String(customer.notes).slice(0, 250);
 
     const requestBody = {
       idempotency_key: idempotencyKey,
       order: {
         location_id: process.env.SQUARE_LOCATION_ID,
         line_items: lineItems,
-        note: orderNote || undefined,
+        metadata: Object.keys(metadata).length ? metadata : undefined,
       },
       checkout_options: {
         redirect_url: `${process.env.SITE_URL}/order-confirmation.html?ref=${idempotencyKey}`,
