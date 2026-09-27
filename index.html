@@ -339,13 +339,6 @@
   }
   .cart-item-options input:focus{ border-bottom-color:var(--teal); }
   .cart-item-options .checkbox-row{ gap:16px; margin-top:2px; }
-  .addon-list{ display:flex; flex-direction:column; gap:9px; margin-top:4px; }
-  .addon-line{
-    display:flex; align-items:center; justify-content:space-between; gap:14px;
-    font-size:0.9rem; font-weight:400; text-transform:none; letter-spacing:normal; color:var(--ink); cursor:pointer;
-  }
-  .addon-line input{ width:15px; height:15px; accent-color:var(--teal); cursor:pointer; margin-right:8px; }
-  .addon-price{ color:var(--ink-soft); font-size:0.82rem; font-style:italic; white-space:nowrap; }
   .cart-item-options .checkbox-option{ font-size:0.86rem; }
   @media (max-width:560px){ .cart-item-options{ grid-template-columns:1fr; } }
   .cart-subtotal{
@@ -608,7 +601,7 @@
       <div class="section-head">
         <div class="eyebrow">Get in touch</div>
         <h2>Order a cake</h2>
-        <p>Add cakes to your cart from the menu above — you can set the date, pickup or delivery, and any add-ons for each one right there. Weekly menu items need 24 hours' notice. Custom cakes need at least 72 hours.</p>
+        <p>Add cakes to your cart from the menu above — you can set the date and any add-ons for each one right there, then choose pickup or delivery for the whole order below. Weekly menu items need 24 hours' notice. Custom cakes need at least 72 hours.</p>
       </div>
 
       <div class="cart-box">
@@ -632,6 +625,21 @@
         <div class="field">
           <label for="phone">Phone (optional)</label>
           <input id="phone" name="phone" type="tel" placeholder="04XX XXX XXX">
+        </div>
+        <div class="field">
+          <label>Pickup or delivery?</label>
+          <div class="checkbox-row">
+            <label class="checkbox-option"><input type="radio" name="fulfilment" value="Pickup" checked> Pickup — Kurraba Point</label>
+            <label class="checkbox-option"><input type="radio" name="fulfilment" value="Delivery"> Delivery</label>
+          </div>
+        </div>
+        <div class="field" id="deliveryAddressField" style="display:none;">
+          <label for="deliveryAddress">Delivery address</label>
+          <input id="deliveryAddress" name="deliveryAddress" type="text" placeholder="Street, suburb, postcode">
+        </div>
+        <div class="field">
+          <label for="preferredTime">Preferred time (optional)</label>
+          <input id="preferredTime" name="preferredTime" type="text" placeholder="e.g. Morning, or 2:00 PM">
         </div>
         <div class="field">
           <label for="message">Anything else?</label>
@@ -680,6 +688,14 @@
     toggle.setAttribute('aria-expanded', 'false');
   }));
 
+  // ---------- Pickup / delivery toggle (one choice for the whole order) ----------
+  document.querySelectorAll('input[name="fulfilment"]').forEach((radio) => {
+    radio.addEventListener('change', () => {
+      document.getElementById('deliveryAddressField').style.display =
+        radio.value === 'Delivery' && radio.checked ? 'block' : 'none';
+    });
+  });
+
   // ---------- Reliable in-page anchor scrolling ----------
   document.querySelectorAll('a[href^="#"]').forEach(a => {
     a.addEventListener('click', function(e){
@@ -700,7 +716,7 @@
     const price = btn.dataset.price ? parseFloat(btn.dataset.price) : null;
     const existing = cart.find(i => i.name === name);
     if (existing) { existing.qty += 1; }
-    else { cart.push({ name, price, qty: 1, date: '', fulfilment: 'Pickup', address: '', addons: [] }); }
+    else { cart.push({ name, price, qty: 1, date: '' }); }
     renderCart();
     btn.classList.add('added');
     btn.textContent = 'Added ✓';
@@ -733,32 +749,12 @@
     }
   });
 
-  // Delegated input/change handlers for the per-item fields rendered inside #cartItems
+  // Delegated input handler for the per-item fields rendered inside #cartItems
   document.addEventListener('input', (e) => {
     const field = e.target.dataset.field;
     if (field && e.target.closest('#cartItems')){
       const index = parseInt(e.target.dataset.index, 10);
       cart[index][field] = e.target.value;
-    }
-  });
-
-  document.addEventListener('change', (e) => {
-    if (!e.target.closest('#cartItems')) return;
-
-    if (e.target.name && e.target.name.startsWith('fulfilment-')){
-      const index = parseInt(e.target.dataset.index, 10);
-      cart[index].fulfilment = e.target.value;
-      const addrEl = document.getElementById('deliveryAddr-' + index);
-      if (addrEl) addrEl.style.display = e.target.value === 'Delivery' ? 'block' : 'none';
-      return;
-    }
-
-    if (e.target.matches('.addon-line input[type="checkbox"]')){
-      const index = parseInt(e.target.dataset.index, 10);
-      const value = e.target.dataset.addon;
-      const addons = cart[index].addons;
-      if (e.target.checked){ if (!addons.includes(value)) addons.push(value); }
-      else { cart[index].addons = addons.filter(a => a !== value); }
     }
   });
 
@@ -785,8 +781,6 @@
     let subtotal = 0;
     let hasTBC = false;
 
-    const addonNames = ['Balloon', 'Card', 'Flowers', 'Happy Birthday Sign', 'Extra Butterscotch Sauce', 'Extra Cream'];
-
     itemsEl.innerHTML = cart.map((item, i) => {
       let priceLabel;
       if (item.price === null){
@@ -796,10 +790,6 @@
         subtotal += item.price * item.qty;
         priceLabel = `A$${item.price} each`;
       }
-      const addonChecked = (val) => item.addons.includes(val) ? 'checked' : '';
-      const addonRows = addonNames.map(name =>
-        `<label class="addon-line"><span><input type="checkbox" data-index="${i}" data-addon="${name}" ${addonChecked(name)}> ${name}</span><span class="addon-price">Price TBC</span></label>`
-      ).join('');
       return `<div class="cart-item">
         <div class="cart-item-header">
           <div>
@@ -817,23 +807,6 @@
           <div class="opt-field">
             <label class="opt-label" for="itemDate-${i}">Needed by</label>
             <input id="itemDate-${i}" type="date" value="${item.date}" data-field="date" data-index="${i}">
-          </div>
-          <div class="opt-field">
-            <label class="opt-label">Pickup or delivery?</label>
-            <div class="checkbox-row">
-              <label class="checkbox-option"><input type="radio" name="fulfilment-${i}" data-index="${i}" value="Pickup" ${item.fulfilment === 'Pickup' ? 'checked' : ''}> Pickup</label>
-              <label class="checkbox-option"><input type="radio" name="fulfilment-${i}" data-index="${i}" value="Delivery" ${item.fulfilment === 'Delivery' ? 'checked' : ''}> Delivery</label>
-            </div>
-          </div>
-          <div class="opt-field full" id="deliveryAddr-${i}" style="display:${item.fulfilment === 'Delivery' ? 'block' : 'none'};">
-            <label class="opt-label" for="itemAddr-${i}">Delivery address</label>
-            <input id="itemAddr-${i}" type="text" placeholder="Street, suburb, postcode" value="${item.address}" data-field="address" data-index="${i}">
-          </div>
-          <div class="opt-field full">
-            <label class="opt-label">Add anything extra?</label>
-            <div class="addon-list">
-              ${addonRows}
-            </div>
           </div>
         </div>
       </div>`;
@@ -855,25 +828,26 @@
     const email = document.getElementById('email').value.trim();
     const phone = document.getElementById('phone').value.trim();
     const notes = document.getElementById('message').value.trim();
+    const fulfilmentType = document.querySelector('input[name="fulfilment"]:checked').value;
+    const deliveryAddress = document.getElementById('deliveryAddress').value.trim();
+    const preferredTime = document.getElementById('preferredTime').value.trim();
 
-    // The cart lets each cake have its own pickup/delivery choice, but one
-    // order can only ship to one place — so if anything in the cart asked
-    // for delivery, the whole order is treated as a delivery.
-    const deliveryItem = cart.find((i) => i.fulfilment === 'Delivery');
+    if (fulfilmentType === 'Delivery' && !deliveryAddress) {
+      alert('Please enter a delivery address, or switch to Pickup.');
+      return;
+    }
 
     const payload = {
       items: cart.map((i) => ({
         name: i.name,
         quantity: i.qty,
-        note: [
-          i.date ? `Needed by ${i.date}` : null,
-          i.addons.length ? `Add-ons: ${i.addons.join(', ')}` : null,
-        ].filter(Boolean).join(' | '),
+        note: i.date ? `Needed by ${i.date}` : '',
       })),
       customer: { name, email, phone, notes },
       fulfilment: {
-        type: deliveryItem ? 'Delivery' : 'Pickup',
-        address: deliveryItem ? deliveryItem.address : null,
+        type: fulfilmentType,
+        address: fulfilmentType === 'Delivery' ? deliveryAddress : null,
+        preferredTime: preferredTime || null,
       },
     };
 
