@@ -311,6 +311,7 @@
     display:flex; align-items:center; justify-content:space-between; gap:14px;
   }
   .cart-item-name{ font-family:'Cormorant Garamond',serif; font-style:italic; font-weight:600; font-size:1.08rem; }
+  .cart-item-diet{ font-family:'Jost',sans-serif; font-style:normal; font-weight:500; font-size:0.78rem; color:var(--gold); text-transform:uppercase; letter-spacing:0.05em; }
   .cart-item-price{ color:var(--ink-soft); font-size:0.88rem; margin-top:2px; }
   .cart-item-controls{ display:flex; align-items:center; gap:10px; }
   .cart-qty-btn{
@@ -704,9 +705,15 @@
   function addToCart(btn){
     const name = btn.dataset.name;
     const price = btn.dataset.price ? parseFloat(btn.dataset.price) : null;
-    const existing = cart.find(i => i.name === name);
+    const menuItem = btn.closest('.menu-item');
+    const dietSelect = menuItem ? menuItem.querySelector('.diet-select') : null;
+    const diet = dietSelect ? dietSelect.value : 'Standard';
+
+    // Gluten Free and Dairy Free are treated as a different line to Standard,
+    // since they're a different thing to bake — not just a note on the same item.
+    const existing = cart.find(i => i.name === name && i.diet === diet);
     if (existing) { existing.qty += 1; }
-    else { cart.push({ name, price, qty: 1 }); }
+    else { cart.push({ name, price, qty: 1, diet }); }
     renderCart();
     btn.classList.add('added');
     btn.textContent = 'Added ✓';
@@ -771,10 +778,11 @@
         subtotal += item.price * item.qty;
         priceLabel = `A$${item.price} each`;
       }
+      const dietSuffix = item.diet && item.diet !== 'Standard' ? ` <span class="cart-item-diet">(${item.diet})</span>` : '';
       return `<div class="cart-item">
         <div class="cart-item-header">
           <div>
-            <div class="cart-item-name">${item.name}</div>
+            <div class="cart-item-name">${item.name}${dietSuffix}</div>
             <div class="cart-item-price">${priceLabel}</div>
           </div>
           <div class="cart-item-controls">
@@ -817,6 +825,7 @@
       items: cart.map((i) => ({
         name: i.name,
         quantity: i.qty,
+        note: i.diet && i.diet !== 'Standard' ? i.diet : undefined,
       })),
       customer: { name, email, phone, notes },
       fulfilment: {
