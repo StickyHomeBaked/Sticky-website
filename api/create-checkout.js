@@ -74,6 +74,7 @@ export default async function handler(req, res) {
       customer?.phone ? `Phone: ${customer.phone}` : null,
       fulfilment?.type ? `Fulfilment: ${fulfilment.type}` : null,
       fulfilment?.type === 'Delivery' && fulfilment?.address ? `Address: ${fulfilment.address}` : null,
+      fulfilment?.preferredTime ? `Preferred time: ${fulfilment.preferredTime}` : null,
       customer?.notes ? `Notes: ${customer.notes}` : null,
     ]
       .filter(Boolean)
