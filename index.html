@@ -332,6 +332,7 @@
   form{display:grid; gap:20px; max-width:560px;}
   .field{display:grid; gap:8px;}
   label{font-size:0.74rem; text-transform:uppercase; letter-spacing:0.1em; font-weight:500; color:var(--ink-soft);}
+  .label-note{ text-transform:none; letter-spacing:0.02em; }
   input, select, textarea{
     font-family:'Jost',sans-serif; font-size:1rem;
     padding:10px 2px; border:none; border-bottom:1px solid var(--line);
@@ -652,7 +653,7 @@
           <input id="deliveryAddress" name="deliveryAddress" type="text" placeholder="Street, suburb, postcode">
         </div>
         <div class="field">
-          <label for="preferredTime" id="preferredTimeLabel">Collection time (optional)</label>
+          <label for="preferredTime" id="preferredTimeLabel"><span id="preferredTimeLabelText">Collection time (optional)</span><span id="preferredTimeNote" class="label-note" style="display:none;"> *Sticky will send confirmation of delivery slot</span></label>
           <input id="preferredTime" name="preferredTime" type="text" placeholder="e.g. Morning, or 2:00 PM">
         </div>
         <div class="field">
@@ -761,9 +762,10 @@
     radio.addEventListener('change', () => {
       const isDelivery = radio.value === 'Delivery' && radio.checked;
       document.getElementById('deliveryAddressField').style.display = isDelivery ? 'block' : 'none';
-      document.getElementById('preferredTimeLabel').textContent = isDelivery
-        ? 'Requested delivery time — Sticky will send confirmation of delivery slot'
+      document.getElementById('preferredTimeLabelText').textContent = isDelivery
+        ? 'Requested delivery time'
         : 'Collection time (optional)';
+      document.getElementById('preferredTimeNote').style.display = isDelivery ? 'inline' : 'none';
     });
   });
 
