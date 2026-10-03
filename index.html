@@ -383,6 +383,7 @@
       <li><a href="#menu">Menu</a></li>
       <li><a href="#gallery">Gallery</a></li>
       <li><a href="#order">Order<span id="cartBadge" class="cart-badge" style="display:none;"></span></a></li>
+      <li><a href="#enquiry">Enquiries</a></li>
       <li><a href="#about">Our story</a></li>
     </ul>
 
@@ -653,15 +654,54 @@
         <div class="field">
           <label for="preferredTime" id="preferredTimeLabel">Collection time (optional)</label>
           <input id="preferredTime" name="preferredTime" type="text" placeholder="e.g. Morning, or 2:00 PM">
+          <p class="form-note" id="preferredTimeHint" style="display:none;">Sticky will send confirmation of your delivery slot.</p>
         </div>
         <div class="field">
-          <label for="message">Anything else?</label>
-          <textarea id="message" name="message" placeholder="Flavours, allergies, size, occasion, custom cake enquiry..."></textarea>
+          <label for="message">Order notes (optional)</label>
+          <textarea id="message" name="message" placeholder="Allergies, a message for the card, anything we should know about this order..."></textarea>
         </div>
         <div class="checkout-note">
           Once you check out, you'll be taken to a secure Square payment page to pay by card. A receipt is emailed to you automatically.
         </div>
         <button class="btn btn-solid" type="submit">Checkout</button>
+      </form>
+    </section>
+
+    <hr class="rule-full">
+
+    <section id="enquiry">
+      <div class="section-head">
+        <div class="eyebrow">Questions?</div>
+        <h2>Send us an enquiry</h2>
+        <p>Custom cakes, special requests, or just a question before you order — send us a message and we'll reply by email. This is separate from your cart, so nothing is charged.</p>
+      </div>
+
+      <form aria-label="Enquiry form" id="enquiryForm">
+        <div class="two-col">
+          <div class="field">
+            <label for="enqName">Name</label>
+            <input id="enqName" name="name" type="text" required maxlength="100">
+          </div>
+          <div class="field">
+            <label for="enqEmail">Email</label>
+            <input id="enqEmail" name="email" type="email" required maxlength="200">
+          </div>
+        </div>
+        <div class="field">
+          <label for="enqPhone">Phone (optional)</label>
+          <input id="enqPhone" name="phone" type="tel" maxlength="40" placeholder="04XX XXX XXX">
+        </div>
+        <div class="field">
+          <label for="enqMessage">Your message</label>
+          <textarea id="enqMessage" name="message" required maxlength="3000" placeholder="Tell us about the cake, occasion, date, number of guests..."></textarea>
+        </div>
+        <!-- Honeypot: hidden from people, but bots tend to fill it in. -->
+        <div style="position:absolute; left:-9999px;" aria-hidden="true">
+          <label for="enqWebsite">Leave this empty</label>
+          <input id="enqWebsite" name="website" type="text" tabindex="-1" autocomplete="off">
+        </div>
+        <button class="btn btn-solid" type="submit" id="enqSubmit">Send enquiry</button>
+        <p class="form-note" id="enqStatus" role="status"></p>
       </form>
     </section>
 
@@ -725,6 +765,7 @@
       document.getElementById('preferredTimeLabel').textContent = isDelivery
         ? 'Requested delivery time (optional)'
         : 'Collection time (optional)';
+      document.getElementById('preferredTimeHint').style.display = isDelivery ? 'block' : 'none';
     });
   });
 
@@ -907,6 +948,45 @@
       submitBtn.disabled = false;
       submitBtn.textContent = originalLabel;
     }
+  });
+
+  // ---------- Enquiry form (separate from checkout; emails the shop) ----------
+  document.getElementById('enquiryForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('enqSubmit');
+    const status = document.getElementById('enqStatus');
+    const form = e.target;
+
+    status.textContent = '';
+    btn.disabled = true;
+    const originalLabel = btn.textContent;
+    btn.textContent = 'Sending…';
+
+    try {
+      const res = await fetch('/api/enquiry', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: form.name.value.trim(),
+          email: form.email.value.trim(),
+          phone: form.phone.value.trim(),
+          message: form.message.value.trim(),
+          website: form.website.value, // honeypot
+        }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        status.textContent = data.error || 'Sorry, something went wrong. Please try again or email us directly.';
+      } else {
+        status.textContent = "Thanks! Your message has been sent — we'll reply by email soon.";
+        form.reset();
+      }
+    } catch (err) {
+      status.textContent = 'Could not send your message. Please try again, or email stickyhomebaked@gmail.com directly.';
+    }
+
+    btn.disabled = false;
+    btn.textContent = originalLabel;
   });
 </script>
 
