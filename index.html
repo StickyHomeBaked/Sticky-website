@@ -610,7 +610,7 @@
       <div class="section-head">
         <div class="eyebrow">Get in touch</div>
         <h2>Order a cake</h2>
-        <p>Add cakes and extras to your cart from the menu above, then fill in your details, date needed, and pickup or delivery below. Weekly menu items need 24 hours' notice. Custom cakes need at least 72 hours.</p>
+        <p>Add cakes and extras to your cart from the menu above, then fill in your details, date needed, and pickup or delivery below. Order by 3pm for next-day pickup or delivery — orders placed after 3pm are available from the day after. Custom cakes need at least 72 hours.</p>
       </div>
 
       <div class="cart-box">
@@ -702,6 +702,20 @@
     sidebar.classList.remove('open');
     toggle.setAttribute('aria-expanded', 'false');
   }));
+
+  // ---------- Next-day ordering cutoff (3pm Sydney time) ----------
+  // Before 3pm: tomorrow is the earliest date. From 3pm: the day after tomorrow.
+  function earliestOrderDate(){
+    const parts = new Intl.DateTimeFormat('en-AU', {
+      timeZone: 'Australia/Sydney', year: 'numeric', month: '2-digit', day: '2-digit',
+      hour: '2-digit', hourCycle: 'h23'
+    }).formatToParts(new Date());
+    const get = (type) => parseInt(parts.find((p) => p.type === type).value, 10);
+    const daysAhead = get('hour') >= 15 ? 2 : 1;
+    const d = new Date(Date.UTC(get('year'), get('month') - 1, get('day') + daysAhead));
+    return d.toISOString().slice(0, 10);
+  }
+  document.getElementById('dateNeeded').min = earliestOrderDate();
 
   // ---------- Pickup / delivery toggle (one choice for the whole order) ----------
   document.querySelectorAll('input[name="fulfilment"]').forEach((radio) => {
