@@ -24,6 +24,11 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Your cart is empty.' });
     }
 
+    // A phone number is needed so we can reach the customer about their order.
+    if (!String(customer?.phone || '').trim()) {
+      return res.status(400).json({ error: 'Please enter a phone number so we can reach you about your order.' });
+    }
+
     // Next-day cutoff: before 3pm Sydney time tomorrow is the earliest date,
     // from 3pm it's the day after. Checked here too, because the date picker
     // in the browser can be bypassed.
@@ -102,7 +107,7 @@ export default async function handler(req, res) {
     }
     if (fulfilment?.dateNeeded) metadata.date_needed = String(fulfilment.dateNeeded).slice(0, 250);
     if (fulfilment?.preferredTime) {
-      metadata.preferred_time_label = fulfilment.type === 'Delivery' ? 'Requested delivery time' : 'Collection time';
+      metadata.preferred_time_label = fulfilment.type === 'Delivery' ? 'Requested delivery time' : 'Requested pickup time';
       metadata.preferred_time = String(fulfilment.preferredTime).slice(0, 250);
     }
     if (customer?.notes) metadata.customer_notes = String(customer.notes).slice(0, 250);
