@@ -24,6 +24,26 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Your cart is empty.' });
     }
 
+    // Next-day cutoff: before 3pm Sydney time tomorrow is the earliest date,
+    // from 3pm it's the day after. Checked here too, because the date picker
+    // in the browser can be bypassed.
+    if (fulfilment?.dateNeeded) {
+      const parts = new Intl.DateTimeFormat('en-AU', {
+        timeZone: 'Australia/Sydney', year: 'numeric', month: '2-digit', day: '2-digit',
+        hour: '2-digit', hourCycle: 'h23',
+      }).formatToParts(new Date());
+      const get = (type) => parseInt(parts.find((p) => p.type === type).value, 10);
+      const daysAhead = get('hour') >= 15 ? 2 : 1;
+      const earliest = new Date(Date.UTC(get('year'), get('month') - 1, get('day') + daysAhead))
+        .toISOString()
+        .slice(0, 10);
+      if (fulfilment.dateNeeded < earliest) {
+        return res.status(400).json({
+          error: `Sorry, the earliest date we can do for an order placed right now is ${earliest}. Please choose a later date.`,
+        });
+      }
+    }
+
     // ---- Price every item against the server-side catalog. ----
     // We never trust a price sent from the browser — only the name and
     // quantity. The actual amount charged always comes from catalog.js.
