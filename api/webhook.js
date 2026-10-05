@@ -123,6 +123,7 @@ async function notifyOwnerOfPaidOrder(payment, order) {
   const meta = order?.metadata || {};
 
   const detailLines = [
+    meta.website_ref ? `Order ref: ${meta.website_ref}` : null,
     meta.customer_name ? `Name: ${meta.customer_name}` : null,
     meta.customer_email ? `Email: ${meta.customer_email}` : null,
     meta.customer_phone ? `Phone: ${meta.customer_phone}` : null,
@@ -163,6 +164,10 @@ async function notifyOwnerOfPaidOrder(payment, order) {
       headers: {
         Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
         'Content-Type': 'application/json',
+        // Square can report the same payment more than once (it sends several
+        // kinds of event, and retries). Using the payment ID as an "idempotency
+        // key" tells Resend to send this email only once per payment.
+        'Idempotency-Key': `paid-order-${payment.id}`,
       },
       body: JSON.stringify({
         from: 'Sticky Home Baked Goodness <onboarding@resend.dev>',
