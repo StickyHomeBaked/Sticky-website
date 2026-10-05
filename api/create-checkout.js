@@ -3,7 +3,8 @@
 // access token, and the only place that decides the final price.
 
 import { randomUUID } from 'crypto';
-import { CATALOG, DELIVERY_FEE_CENTS } from '../lib/catalog.js';
+import { CATALOG } from '../lib/catalog.js';
+import { quoteDelivery, DeliveryError } from '../lib/delivery.js';
 
 const SQUARE_ENVIRONMENT = process.env.SQUARE_ENVIRONMENT || 'sandbox';
 const SQUARE_BASE_URL =
@@ -29,10 +30,15 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Please enter a phone number so we can reach you about your order.' });
     }
 
+    // A date is required, so we know when the order is needed.
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(String(fulfilment?.dateNeeded || ''))) {
+      return res.status(400).json({ error: 'Please choose the date you need your order.' });
+    }
+
     // Next-day cutoff: before 3pm Sydney time tomorrow is the earliest date,
     // from 3pm it's the day after. Checked here too, because the date picker
     // in the browser can be bypassed.
-    if (fulfilment?.dateNeeded) {
+    {
       const parts = new Intl.DateTimeFormat('en-AU', {
         timeZone: 'Australia/Sydney', year: 'numeric', month: '2-digit', day: '2-digit',
         hour: '2-digit', hourCycle: 'h23',
@@ -53,6 +59,8 @@ export default async function handler(req, res) {
     // We never trust a price sent from the browser — only the name and
     // quantity. The actual amount charged always comes from catalog.js.
     const lineItems = [];
+    const quantityByProduct = {};
+    let itemsTotalCents = 0;
     for (const requested of items) {
       const catalogItem = CATALOG.find((c) => c.name === requested.name);
 
@@ -66,6 +74,8 @@ export default async function handler(req, res) {
       }
 
       const quantity = Math.max(1, parseInt(requested.quantity, 10) || 1);
+      quantityByProduct[catalogItem.name] = (quantityByProduct[catalogItem.name] || 0) + quantity;
+      itemsTotalCents += catalogItem.price * quantity;
 
       lineItems.push({
         name: catalogItem.name,
@@ -78,26 +88,54 @@ export default async function handler(req, res) {
       });
     }
 
-    // ---- Delivery fee, added once per order if any item asked for delivery. ----
-    if (fulfilment && fulfilment.type === 'Delivery') {
+    // ---- Minimum order quantities (e.g. 6 Mini Sticky Date Cakes). ----
+    // Counted across all variations (Standard, Gluten Free, ...) of a product.
+    for (const catalogItem of CATALOG) {
+      const ordered = quantityByProduct[catalogItem.name];
+      if (catalogItem.minQuantity && ordered && ordered < catalogItem.minQuantity) {
+        return res.status(400).json({
+          error: `${catalogItem.name} have a minimum order of ${catalogItem.minQuantity}. Please add more, or remove them from your cart.`,
+        });
+      }
+    }
+
+    // ---- Delivery fee, based on the distance from Neutral Bay. ----
+    // Worked out here from the address (never taken from the browser).
+    let deliveryFeeCents = 0;
+    let deliveryDistanceKm = null;
+    if (fulfilment?.type === 'Delivery') {
+      try {
+        const quote = await quoteDelivery(fulfilment.address);
+        deliveryFeeCents = quote.feeCents;
+        deliveryDistanceKm = Math.round(quote.distanceKm * 10) / 10;
+      } catch (err) {
+        if (err instanceof DeliveryError) {
+          return res.status(400).json({ error: err.message });
+        }
+        throw err;
+      }
       lineItems.push({
-        name: 'Delivery',
+        name: `Delivery (${deliveryDistanceKm} km)`,
         quantity: '1',
         base_price_money: {
-          amount: DELIVERY_FEE_CENTS,
+          amount: deliveryFeeCents,
           currency: 'AUD',
         },
       });
     }
 
     const idempotencyKey = randomUUID();
+    // A short, readable reference for the customer's thank-you page and your
+    // order email, so a website order can be matched to its Square order.
+    const orderRef = idempotencyKey.slice(0, 8).toUpperCase();
 
     // Square's Payment Links endpoint doesn't reliably keep a free-text
     // order note, so instead we store each piece of customer/fulfilment
     // information as its own metadata field on the order — metadata is
     // part of the core Order object and comes back intact when we fetch
     // the order later in the webhook.
-    const metadata = {};
+    const metadata = { website_ref: orderRef };
+    if (deliveryDistanceKm !== null) metadata.delivery_distance_km = String(deliveryDistanceKm);
     if (customer?.name) metadata.customer_name = String(customer.name).slice(0, 250);
     if (customer?.email) metadata.customer_email = String(customer.email).slice(0, 250);
     if (customer?.phone) metadata.customer_phone = String(customer.phone).slice(0, 250);
@@ -120,7 +158,7 @@ export default async function handler(req, res) {
         metadata: Object.keys(metadata).length ? metadata : undefined,
       },
       checkout_options: {
-        redirect_url: `${process.env.SITE_URL}/order-confirmation.html?ref=${idempotencyKey}`,
+        redirect_url: `${process.env.SITE_URL}/order-confirmation.html?ref=${orderRef}`,
       },
       pre_populated_data: customer?.email ? { buyer_email: customer.email } : undefined,
     };
@@ -145,7 +183,9 @@ export default async function handler(req, res) {
     return res.status(200).json({
       checkoutUrl: data.payment_link.url,
       orderId: data.payment_link.order_id,
-      reference: idempotencyKey,
+      reference: orderRef,
+      deliveryFeeCents,
+      totalCents: itemsTotalCents + deliveryFeeCents,
     });
   } catch (err) {
     console.error('Unexpected error creating checkout:', err);
