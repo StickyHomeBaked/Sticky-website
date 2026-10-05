@@ -15,6 +15,12 @@
   .item{ display:flex; justify-content:space-between; padding:9px 0; border-bottom:1px solid rgba(59,35,23,0.15); font-size:0.96rem; }
   .item:last-child{ border-bottom:none; }
   .ref{ color:#8A7461; font-size:0.85rem; margin-top:6px; }
+  .refcode{ font-size:1.05rem; letter-spacing:0.08em; font-weight:500; color:#3B2317; }
+  .row{ display:flex; justify-content:space-between; gap:16px; padding:9px 0; border-bottom:1px solid rgba(59,35,23,0.15); font-size:0.96rem; }
+  .row:last-child{ border-bottom:none; }
+  .row .k{ color:#8A7461; }
+  .row.total{ font-weight:500; font-size:1.05rem; }
+  .diet{ color:#C48C97; font-size:0.78rem; text-transform:uppercase; letter-spacing:0.05em; }
   a{ color:#00AEB7; }
 </style>
 </head>
@@ -22,11 +28,15 @@
   <h1>Thank you!</h1>
   <p id="summaryText">Your payment was received and your order is confirmed. A receipt has been sent to your email by Square.</p>
 
+  <p class="ref" id="refLine"></p>
+
   <div class="box" id="itemsBox" style="display:none;">
     <div id="itemsList"></div>
   </div>
 
-  <p class="ref" id="refLine"></p>
+  <div class="box" id="detailsBox" style="display:none;">
+    <div id="detailsList"></div>
+  </div>
 
   <p>If anything looks wrong, or you need to change your order, just reply to your confirmation email or contact us directly at
     <a href="mailto:stickyhomebaked@gmail.com">stickyhomebaked@gmail.com</a> or
@@ -35,20 +45,73 @@
 
 <script>
   const params = new URLSearchParams(window.location.search);
-  const ref = params.get('ref');
-  document.getElementById('refLine').textContent = ref ? `Order reference: ${ref}` : '';
+  const urlRef = params.get('ref');
 
-  try {
-    const saved = JSON.parse(sessionStorage.getItem('stickyLastOrder') || 'null');
-    if (saved && Array.isArray(saved.items) && saved.items.length) {
-      document.getElementById('itemsBox').style.display = 'block';
-      document.getElementById('itemsList').innerHTML = saved.items
-        .map((i) => `<div class="item"><span>${i.qty} × ${i.name}</span></div>`)
-        .join('');
+  // Builds a row using textContent (never innerHTML) so nothing a customer
+  // typed can ever be treated as page code.
+  function row(parent, left, right, cls, leftClass) {
+    const r = document.createElement('div');
+    r.className = 'row' + (cls ? ' ' + cls : '');
+    const l = document.createElement('span');
+    if (leftClass) l.className = leftClass;
+    l.textContent = left;
+    r.appendChild(l);
+    if (right !== undefined && right !== null) {
+      const rt = document.createElement('span');
+      rt.textContent = right;
+      r.appendChild(rt);
     }
-  } catch (e) {
-    // If sessionStorage is empty (e.g. a different device), we just skip
-    // showing the item list — the payment itself is still fully valid.
+    parent.appendChild(r);
+    return r;
+  }
+  const money = (cents) => 'A$' + (cents / 100).toFixed(2);
+
+  let saved = null;
+  try { saved = JSON.parse(sessionStorage.getItem('stickyLastOrder') || 'null'); } catch (e) {}
+
+  // The reference matches the "Order ref" in the shop's order email.
+  const ref = (saved && saved.ref) || urlRef;
+  if (ref) {
+    const el = document.getElementById('refLine');
+    el.append('Order reference: ');
+    const code = document.createElement('span');
+    code.className = 'refcode';
+    code.textContent = ref;
+    el.appendChild(code);
+  }
+
+  // If this was opened on a different device or after the browser was closed,
+  // the details won't be here — the payment itself is still fully valid, and
+  // the full order is in the receipt email from Square.
+  if (saved && Array.isArray(saved.items) && saved.items.length) {
+    document.getElementById('itemsBox').style.display = 'block';
+    const list = document.getElementById('itemsList');
+    saved.items.forEach((i) => {
+      const r = row(list, i.qty + ' × ' + i.name, typeof i.price === 'number' ? money(i.price * i.qty * 100) : '');
+      if (i.diet && i.diet !== 'Standard') {
+        const d = document.createElement('span');
+        d.className = 'diet';
+        d.textContent = ' (' + i.diet + ')';
+        r.firstChild.appendChild(d);
+      }
+    });
+    if (saved.deliveryFeeCents) {
+      row(list, 'Delivery' + (saved.deliveryKm ? ' (' + saved.deliveryKm + ' km)' : ''), money(saved.deliveryFeeCents));
+    }
+    if (typeof saved.totalCents === 'number') {
+      row(list, 'Total', money(saved.totalCents), 'total');
+    }
+
+    const f = saved.fulfilment || {};
+    const details = document.getElementById('detailsList');
+    document.getElementById('detailsBox').style.display = 'block';
+    row(details, f.type === 'Delivery' ? 'Delivery' : 'Pickup', null, '', 'k');
+    if (f.type === 'Delivery' && f.address) row(details, 'Delivering to', f.address);
+    if (f.dateNeeded) row(details, 'Date needed', f.dateNeeded);
+    if (f.preferredTime) row(details, f.type === 'Delivery' ? 'Requested delivery time' : 'Requested pickup time', f.preferredTime);
+    row(details, f.type === 'Delivery'
+      ? 'Sticky will send confirmation of your delivery slot.'
+      : 'Sticky will confirm your pickup slot.', null, '', 'k');
   }
 </script>
 </body>
