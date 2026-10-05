@@ -4,6 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sticky Home Baked Goodness</title>
+<meta name="description" content="Home baked comfort cakes in Neutral Bay, Sydney — sticky date cakes, carrot &amp; walnut, chocolate and more. Order online for pickup or delivery.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Sticky Home Baked Goodness">
+<meta property="og:description" content="Home baked comfort cakes in Neutral Bay, Sydney. Order online for pickup or delivery.">
+<meta property="og:image" content="https://sticky-square-checkout.vercel.app/photos/sticky-date-original.jpg">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -351,6 +357,11 @@
   .checkbox-option input{ width:16px; height:16px; accent-color:var(--teal); cursor:pointer; }
   form .btn{cursor:pointer; justify-self:start; margin-top:6px;}
   .form-note{font-size:0.8rem; color:var(--ink-soft);}
+  .allergen-note{ font-size:0.82rem; color:var(--ink-soft); line-height:1.55; max-width:64ch; margin:0 0 30px; }
+  .cart-line{ padding-top:8px; margin-top:0; font-size:1.05rem; }
+  .cart-total{ border-top:1px solid var(--line); margin-top:10px; padding-top:12px; font-size:1.3rem; }
+  .cart-item-min{ color:var(--gold); font-size:0.78rem; margin-top:2px; }
+  .quote-status{ color:#9b3b3b; }
   .checkout-note{
     background:var(--beige); border:1px solid var(--line); border-radius:6px;
     padding:16px 18px; font-size:0.9rem; color:var(--ink); line-height:1.5;
@@ -433,6 +444,7 @@
     </section>
 
     <section id="menu">
+      <p class="allergen-note">Allergens: our cakes are made in a home kitchen where gluten, dairy, nuts and other allergens are used. Gluten Free and Dairy Free options are made with care, but we can't guarantee any cake is completely free of allergens. Please tell us about any allergies in your order notes.</p>
       <div class="menu-cols">
         <div>
           <h3 class="menu-group-title">Sticky Date Cakes</h3>
@@ -460,7 +472,7 @@
           <div class="menu-item">
             <div class="menu-thumb"><img src="photos/mini-sticky-date.jpg" alt="Individual mini Sticky Date Cakes topped with roasted nuts and rose petals"></div>
             <div><h3>Mini Sticky Date Cakes</h3><p>Our signature Sticky Date Cake, baked as individual sized cakes with butterscotch sauce and fresh cream. Perfect for dinner parties. (Minimum order 6)</p><select class="diet-select" aria-label="Dietary option for Mini Sticky Date Cakes"><option>Standard</option><option>Gluten Free</option><option>Dairy Free</option></select></div>
-            <div class="price-row"><div class="price">A$6 each</div><button type="button" class="add-cart-btn" data-name="Mini Sticky Date Cakes" data-price="6">Add to Cart</button></div>
+            <div class="price-row"><div class="price">A$6 each</div><button type="button" class="add-cart-btn" data-name="Mini Sticky Date Cakes" data-price="6" data-min-qty="6">Add to Cart</button></div>
           </div>
         </div>
 
@@ -620,6 +632,8 @@
         <div id="cartEmpty" class="cart-empty">No cakes added yet — use the "Add to Cart" button on any cake in the menu above.</div>
         <div id="cartItems"></div>
         <div id="cartSubtotal" class="cart-subtotal" style="display:none;"></div>
+        <div id="cartDelivery" class="cart-subtotal cart-line" style="display:none;"></div>
+        <div id="cartTotal" class="cart-subtotal cart-total" style="display:none;"></div>
       </div>
 
       <form aria-label="Cake order form" id="orderForm">
@@ -639,7 +653,7 @@
         </div>
         <div class="field">
           <label for="dateNeeded">Date needed</label>
-          <input id="dateNeeded" name="dateNeeded" type="date">
+          <input id="dateNeeded" name="dateNeeded" type="date" required>
         </div>
         <div class="field">
           <label>Pickup or delivery?</label>
@@ -651,6 +665,8 @@
         <div class="field" id="deliveryAddressField" style="display:none;">
           <label for="deliveryAddress">Delivery address</label>
           <input id="deliveryAddress" name="deliveryAddress" type="text" placeholder="Street, suburb, postcode">
+          <p class="form-note">Delivery fee from Neutral Bay: A$12 up to 10 km · A$15 over 10 km · A$20 for 20 km or more.</p>
+          <p class="form-note quote-status" id="deliveryQuoteStatus" role="status"></p>
         </div>
         <div class="field">
           <label for="preferredTime" id="preferredTimeLabel"><span id="preferredTimeLabelText">Requested pickup time</span><span id="preferredTimeNote" class="label-note"> *Sticky will confirm your pickup slot</span></label>
@@ -662,6 +678,7 @@
         </div>
         <div class="checkout-note">
           Once you check out, you'll be taken to a secure Square payment page to pay by card. A receipt is emailed to you automatically.
+          <span style="display:block; margin-top:10px; font-size:0.82rem; color:var(--ink-soft);">Allergens: our cakes are made in a home kitchen where gluten, dairy, nuts and other allergens are used. Gluten Free and Dairy Free options are made with care, but we can't guarantee any cake is completely free of allergens. Please tell us about any allergies in your order notes.</span>
         </div>
         <button class="btn btn-solid" type="submit">Checkout</button>
       </form>
@@ -761,13 +778,14 @@
   document.querySelectorAll('input[name="fulfilment"]').forEach((radio) => {
     radio.addEventListener('change', () => {
       const isDelivery = radio.value === 'Delivery' && radio.checked;
-      document.getElementById('deliveryAddressField').style.display = isDelivery ? 'block' : 'none';
+      document.getElementById('deliveryAddressField').style.display = isDelivery ? 'grid' : 'none';
       document.getElementById('preferredTimeLabelText').textContent = isDelivery
         ? 'Requested delivery time'
         : 'Requested pickup time';
       document.getElementById('preferredTimeNote').textContent = isDelivery
         ? ' *Sticky will send confirmation of delivery slot'
         : ' *Sticky will confirm your pickup slot';
+      if (isDelivery) { requestQuote(); } else { deliveryQuote = { status: 'idle' }; renderCart(); }
     });
   });
 
@@ -795,9 +813,16 @@
 
     // Gluten Free and Dairy Free are treated as a different line to Standard,
     // since they're a different thing to bake — not just a note on the same item.
+    const minQty = btn.dataset.minQty ? parseInt(btn.dataset.minQty, 10) : 0;
     const existing = cart.find(i => i.name === name && i.diet === diet);
     if (existing) { existing.qty += 1; }
-    else { cart.push({ name, price, qty: 1, diet }); }
+    else {
+      // For items with a minimum order (e.g. 6 mini cakes), the first add
+      // puts the full minimum in the cart.
+      const alreadyOrdered = cart.filter(i => i.name === name).reduce((sum, i) => sum + i.qty, 0);
+      const startQty = minQty && alreadyOrdered < minQty ? minQty - alreadyOrdered : 1;
+      cart.push({ name, price, qty: startQty, diet, minQty });
+    }
     renderCart();
     btn.classList.add('added');
     btn.textContent = 'Added ✓';
@@ -815,6 +840,14 @@
     if (qtyBtn){
       const index = parseInt(qtyBtn.dataset.index, 10);
       const delta = parseInt(qtyBtn.dataset.delta, 10);
+      const line = cart[index];
+      if (delta < 0 && line.minQty) {
+        const totalForItem = cart.filter(i => i.name === line.name).reduce((sum, i) => sum + i.qty, 0);
+        if (totalForItem - 1 < line.minQty) {
+          alert(`${line.name} have a minimum order of ${line.minQty}. Use "Remove" if you'd like to take them out.`);
+          return;
+        }
+      }
       cart[index].qty += delta;
       if (cart[index].qty <= 0) cart.splice(index, 1);
       renderCart();
@@ -846,6 +879,9 @@
       emptyEl.style.display = 'block';
       itemsEl.innerHTML = '';
       subtotalEl.style.display = 'none';
+      document.getElementById('cartDelivery').style.display = 'none';
+      document.getElementById('cartTotal').style.display = 'none';
+      renderQuoteStatus();
       return;
     }
 
@@ -868,6 +904,7 @@
           <div>
             <div class="cart-item-name">${item.name}${dietSuffix}</div>
             <div class="cart-item-price">${priceLabel}</div>
+            ${item.minQty ? `<div class="cart-item-min">Minimum order of ${item.minQty}</div>` : ''}
           </div>
           <div class="cart-item-controls">
             <button type="button" class="cart-qty-btn" data-index="${i}" data-delta="-1" aria-label="Decrease quantity">–</button>
@@ -881,7 +918,79 @@
 
     subtotalEl.style.display = 'flex';
     subtotalEl.innerHTML = `<span>Subtotal</span><span>A$${subtotal}${hasTBC ? ' + items TBC' : ''}</span>`;
+
+    // Delivery fee + total, only when the order is a delivery.
+    const delEl = document.getElementById('cartDelivery');
+    const totEl = document.getElementById('cartTotal');
+    if (!isDelivery()) {
+      delEl.style.display = 'none';
+      totEl.style.display = 'none';
+    } else {
+      delEl.style.display = 'flex';
+      totEl.style.display = 'none';
+      if (deliveryQuote.status === 'ok') {
+        const fee = deliveryQuote.feeCents / 100;
+        delEl.innerHTML = `<span>Delivery (${deliveryQuote.km} km)</span><span>A$${fee}</span>`;
+        totEl.style.display = 'flex';
+        totEl.innerHTML = `<span>Total</span><span>A$${subtotal + fee}</span>`;
+      } else if (deliveryQuote.status === 'loading') {
+        delEl.innerHTML = '<span>Delivery</span><span>calculating…</span>';
+      } else if (deliveryQuote.status === 'error') {
+        delEl.innerHTML = '<span>Delivery</span><span>check your address below</span>';
+      } else {
+        delEl.innerHTML = '<span>Delivery</span><span>enter your address below</span>';
+      }
+    }
+    renderQuoteStatus();
   }
+
+  // ---------- Delivery fee quote (shown in the cart before checkout) ----------
+  // This is only for showing the customer what to expect — the fee that is
+  // actually charged is worked out again on the server at checkout.
+  let deliveryQuote = { status: 'idle' };
+  let quoteTimer = null;
+  let quoteSeq = 0;
+
+  function isDelivery(){
+    return document.querySelector('input[name="fulfilment"]:checked').value === 'Delivery';
+  }
+
+  function renderQuoteStatus(){
+    const el = document.getElementById('deliveryQuoteStatus');
+    el.textContent = deliveryQuote.status === 'error' ? deliveryQuote.message : '';
+  }
+
+  async function requestQuote(){
+    const address = document.getElementById('deliveryAddress').value.trim();
+    if (!isDelivery() || address.length < 5) { deliveryQuote = { status: 'idle' }; renderCart(); return; }
+    const mySeq = ++quoteSeq;
+    deliveryQuote = { status: 'loading' };
+    renderCart();
+    try {
+      const res = await fetch('/api/delivery-fee', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ address }),
+      });
+      const data = await res.json();
+      if (mySeq !== quoteSeq) return; // a newer lookup replaced this one
+      deliveryQuote = data.ok
+        ? { status: 'ok', feeCents: data.feeCents, km: data.distanceKm }
+        : { status: 'error', message: data.error || "We couldn't work out the delivery fee." };
+    } catch (err) {
+      if (mySeq !== quoteSeq) return;
+      deliveryQuote = { status: 'error', message: "We couldn't check the delivery fee just now. You can still check out — we'll confirm it at payment." };
+    }
+    renderCart();
+  }
+
+  document.getElementById('deliveryAddress').addEventListener('input', () => {
+    clearTimeout(quoteTimer);
+    quoteSeq++;                       // ignore any lookup still in flight
+    deliveryQuote = { status: 'idle' };
+    renderCart();
+    quoteTimer = setTimeout(requestQuote, 800);
+  });
 
   document.getElementById('orderForm').addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -905,9 +1014,25 @@
     const deliveryAddress = document.getElementById('deliveryAddress').value.trim();
     const preferredTime = document.getElementById('preferredTime').value.trim();
 
+    if (!dateNeeded) {
+      alert('Please choose the date you need your order.');
+      document.getElementById('dateNeeded').focus();
+      return;
+    }
+
     if (fulfilmentType === 'Delivery' && !deliveryAddress) {
       alert('Please enter a delivery address, or switch to Pickup.');
       return;
+    }
+
+    // Minimum order quantities (e.g. 6 mini cakes), counted across variations.
+    const totalsByName = {};
+    cart.forEach((i) => { totalsByName[i.name] = (totalsByName[i.name] || 0) + i.qty; });
+    for (const line of cart) {
+      if (line.minQty && totalsByName[line.name] < line.minQty) {
+        alert(`${line.name} have a minimum order of ${line.minQty}. Please add more, or remove them from your cart.`);
+        return;
+      }
     }
 
     const payload = {
@@ -924,10 +1049,6 @@
         preferredTime: preferredTime || null,
       },
     };
-
-    // So the confirmation page can show what was ordered once the customer
-    // is sent back here after paying.
-    sessionStorage.setItem('stickyLastOrder', JSON.stringify({ items: cart, name, email }));
 
     const submitBtn = document.querySelector('#orderForm button[type="submit"]');
     const originalLabel = submitBtn.textContent;
@@ -949,6 +1070,21 @@
         return;
       }
 
+      // So the thank-you page can show the order once the customer is sent
+      // back here after paying. Total and fee come from the server.
+      sessionStorage.setItem('stickyLastOrder', JSON.stringify({
+        ref: data.reference,
+        items: cart.map((i) => ({ name: i.name, qty: i.qty, diet: i.diet, price: i.price })),
+        totalCents: data.totalCents,
+        deliveryFeeCents: data.deliveryFeeCents,
+        deliveryKm: deliveryQuote.status === 'ok' ? deliveryQuote.km : null,
+        fulfilment: {
+          type: fulfilmentType,
+          address: fulfilmentType === 'Delivery' ? deliveryAddress : null,
+          dateNeeded,
+          preferredTime: preferredTime || null,
+        },
+      }));
       window.location.href = data.checkoutUrl;
     } catch (err) {
       alert('Could not reach the checkout server. Please try again, or contact us directly.');
