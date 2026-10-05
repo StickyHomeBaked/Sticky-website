@@ -1,0 +1,106 @@
+// Works out the delivery fee from how far the delivery address is from
+// Neutral Bay. Used by BOTH the cart (to show the fee before checkout) and
+// the checkout itself (to decide the fee that is actually charged) — so the
+// two can never disagree, and the browser can never set its own fee.
+//
+// HOW IT WORKS
+//   1. The address is turned into map coordinates using OpenStreetMap's free
+//      "Nominatim" lookup service.
+//   2. The straight-line ("as the crow flies") distance from Neutral Bay is
+//      calculated. This is shorter than the driving distance, especially
+//      around the harbour and bridges.
+//   3. The distance picks the fee (see FEE BANDS below).
+//
+// FEE BANDS (change the numbers here any time; amounts are in cents)
+//   up to and including 10 km  ->  A$12
+//   over 10 km, under 20 km    ->  A$15
+//   20 km or more              ->  A$20
+
+// Centre of Neutral Bay (the suburb, not a street address).
+const ORIGIN = { lat: -33.8316, lon: 151.2189 };
+
+export function feeCentsForDistanceKm(km) {
+  if (km <= 10) return 1200;
+  if (km < 20) return 1500;
+  return 2000;
+}
+
+export function haversineKm(a, b) {
+  const R = 6371; // Earth's radius in km
+  const toRad = (deg) => (deg * Math.PI) / 180;
+  const dLat = toRad(b.lat - a.lat);
+  const dLon = toRad(b.lon - a.lon);
+  const h =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(toRad(a.lat)) * Math.cos(toRad(b.lat)) * Math.sin(dLon / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(h));
+}
+
+// An error whose message is safe and sensible to show to a customer.
+export class DeliveryError extends Error {}
+
+// Remembers recent lookups while the server is warm, so the same address
+// (the cart check and then the checkout) isn't looked up twice.
+const cache = new Map();
+
+async function geocode(address) {
+  const key = address.toLowerCase();
+  if (cache.has(key)) return cache.get(key);
+
+  const query = /australia/i.test(address) ? address : `${address}, Australia`;
+  const url =
+    'https://nominatim.openstreetmap.org/search' +
+    `?format=jsonv2&limit=1&countrycodes=au&viewbox=150.5,-33.4,151.6,-34.2&q=${encodeURIComponent(query)}`;
+
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 7000);
+  let response;
+  try {
+    response = await fetch(url, {
+      signal: controller.signal,
+      // Nominatim's usage rules ask for an identifying User-Agent.
+      headers: { 'User-Agent': 'StickyHomeBakedGoodness-website/1.0 (stickyhomebaked@gmail.com)' },
+    });
+  } catch {
+    throw new DeliveryError(
+      "We couldn't check the delivery distance just now. Please try again in a moment, or send us an enquiry."
+    );
+  } finally {
+    clearTimeout(timer);
+  }
+
+  if (!response.ok) {
+    throw new DeliveryError(
+      "We couldn't check the delivery distance just now. Please try again in a moment, or send us an enquiry."
+    );
+  }
+
+  const results = await response.json();
+  if (!Array.isArray(results) || results.length === 0) {
+    throw new DeliveryError(
+      "We couldn't find that address. Please include the street, suburb and postcode — or send us an enquiry."
+    );
+  }
+
+  const point = { lat: parseFloat(results[0].lat), lon: parseFloat(results[0].lon) };
+  if (Number.isNaN(point.lat) || Number.isNaN(point.lon)) {
+    throw new DeliveryError(
+      "We couldn't find that address. Please include the street, suburb and postcode — or send us an enquiry."
+    );
+  }
+
+  cache.set(key, point);
+  if (cache.size > 200) cache.delete(cache.keys().next().value);
+  return point;
+}
+
+// Returns { feeCents, distanceKm } or throws a DeliveryError.
+export async function quoteDelivery(address) {
+  const clean = String(address || '').trim().slice(0, 200);
+  if (clean.length < 5) {
+    throw new DeliveryError('Please enter your full delivery address (street, suburb and postcode).');
+  }
+  const point = await geocode(clean);
+  const distanceKm = haversineKm(ORIGIN, point);
+  return { feeCents: feeCentsForDistanceKm(distanceKm), distanceKm };
+}
