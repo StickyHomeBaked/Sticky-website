@@ -15,7 +15,6 @@
   .item{ display:flex; justify-content:space-between; padding:9px 0; border-bottom:1px solid rgba(59,35,23,0.15); font-size:0.96rem; }
   .item:last-child{ border-bottom:none; }
   .ref{ color:#8A7461; font-size:0.85rem; margin-top:6px; }
-  .refcode{ font-size:1.05rem; letter-spacing:0.08em; font-weight:500; color:#3B2317; }
   .row{ display:flex; justify-content:space-between; gap:16px; padding:9px 0; border-bottom:1px solid rgba(59,35,23,0.15); font-size:0.96rem; }
   .row:last-child{ border-bottom:none; }
   .row .k{ color:#8A7461; }
@@ -28,8 +27,6 @@
   <h1>Thank you!</h1>
   <p id="summaryText">Your payment was received and your order is confirmed. A receipt has been sent to your email by Square.</p>
 
-  <p class="ref" id="refLine"></p>
-
   <div class="box" id="itemsBox" style="display:none;">
     <div id="itemsList"></div>
   </div>
@@ -38,15 +35,12 @@
     <div id="detailsList"></div>
   </div>
 
-  <p>If anything looks wrong, or you need to change your order, just reply to your confirmation email or contact us directly at
+  <p>If anything looks wrong, or you need to change your order, please get in touch at
     <a href="mailto:stickyhomebaked@gmail.com">stickyhomebaked@gmail.com</a> or
-    <a href="tel:0403207894">0403 207 894</a>.
+    <a href="tel:0403207894">0403 207 894</a> with your name and the date you need your order.
   </p>
 
 <script>
-  const params = new URLSearchParams(window.location.search);
-  const urlRef = params.get('ref');
-
   // Builds a row using textContent (never innerHTML) so nothing a customer
   // typed can ever be treated as page code.
   function row(parent, left, right, cls, leftClass) {
@@ -68,17 +62,6 @@
 
   let saved = null;
   try { saved = JSON.parse(sessionStorage.getItem('stickyLastOrder') || 'null'); } catch (e) {}
-
-  // The reference matches the "Order ref" in the shop's order email.
-  const ref = (saved && saved.ref) || urlRef;
-  if (ref) {
-    const el = document.getElementById('refLine');
-    el.append('Order reference: ');
-    const code = document.createElement('span');
-    code.className = 'refcode';
-    code.textContent = ref;
-    el.appendChild(code);
-  }
 
   // If this was opened on a different device or after the browser was closed,
   // the details won't be here — the payment itself is still fully valid, and
