@@ -102,22 +102,6 @@
   }
   .cart-badge-on-btn{ background:var(--paper); color:var(--teal); }
 
-  .floating-cart{
-    position:fixed; top:22px; right:28px; z-index:60;
-    width:48px; height:48px; border-radius:50%; background:var(--teal); color:var(--paper);
-    display:flex; align-items:center; justify-content:center;
-    box-shadow:0 6px 18px rgba(59,35,23,0.22); text-decoration:none;
-    transition:transform .15s ease;
-  }
-  .floating-cart:hover{ transform:scale(1.07); }
-  .floating-cart svg{ width:21px; height:21px; }
-  .cart-badge-float{
-    position:absolute; top:-5px; right:-5px; margin-left:0;
-    background:var(--gold); color:var(--paper); border:2px solid var(--paper);
-  }
-  @media (max-width:900px){
-    .floating-cart{ top:auto; bottom:22px; right:22px; }
-  }
   .side-nav a:hover, .side-nav a:focus-visible{ color:var(--gold); padding-left:2px; }
   .side-nav a:hover::before, .side-nav a:focus-visible::before{ opacity:1; }
 
@@ -161,7 +145,7 @@
 
   section{ padding:72px 0; }
   #top.hero{
-    padding-top:88px; padding-bottom:64px; position:relative; overflow:hidden;
+    padding-top:56px; padding-bottom:40px; position:relative; overflow:hidden;
     margin-left:-56px; padding-left:56px;
     margin-right:-56px; padding-right:56px;
   }
@@ -181,13 +165,6 @@
   #top.hero p.lede{ color:rgba(251,243,225,0.9); }
   #top.hero .btn-outline{ color:#FBF3E1; border-color:#FBF3E1; }
   #top.hero .btn-outline:hover{ background:#FBF3E1; color:var(--ink); }
-  .hero-menu-lead{
-    position:relative; z-index:1; margin-top:52px; padding-top:36px;
-    border-top:1px solid rgba(251,243,225,0.3);
-  }
-  #top.hero .hero-menu-lead .eyebrow{ color:#F2C9DA; text-shadow:0 1px 4px rgba(20,12,6,0.35); }
-  #top.hero .hero-menu-lead h2{ color:#FBF3E1; text-shadow:0 1px 6px rgba(20,12,6,0.3); }
-  #top.hero .hero-menu-lead p{ color:rgba(251,243,225,0.95); text-shadow:0 1px 4px rgba(20,12,6,0.3); }
   @media (max-width:900px){
     #top.hero{ margin-left:-24px; padding-left:24px; margin-right:-24px; padding-right:24px; }
   }
@@ -221,10 +198,11 @@
     border:1px solid var(--gold-soft); top:50%; left:50%; transform:translate(-50%,-50%);
   }
   @media (max-width:820px){
-    .hero-inner{grid-template-columns:1fr; gap:32px;}
-    .hero-art{order:-1;}
-    .hero-art img{width:205px;}
-    .hero-art::before{width:220px; height:220px;}
+    .hero-inner{grid-template-columns:1fr; gap:0;}
+    .hero-art{display:none;}
+    .hero p.lede{display:none;}
+    .hero-actions{margin-top:22px;}
+    #top.hero{padding-top:40px; padding-bottom:32px;}
     .hero h1{white-space:normal; font-size:clamp(1.9rem, 6vw, 2.6rem);}
   }
 
@@ -277,10 +255,17 @@
   .diet-select:focus{ border-bottom-color:var(--teal); color:var(--ink); }
   .diet-select option{ background:var(--paper); color:var(--ink); text-transform:none; }
   @media (max-width:640px){
-    .menu-cols > div{ grid-template-columns:1fr; }
-    .menu-item{ margin-bottom:40px; }
-    .menu-thumb{ aspect-ratio:4 / 3; }
-    .menu-thumb img{ object-position:center 42%; }
+    .menu-cols > div{ grid-template-columns:repeat(2, minmax(0, 1fr)); column-gap:12px; }
+    .menu-group-title{ font-size:1.55rem; }
+    .menu-item{ margin-bottom:26px; }
+    .menu-thumb{ aspect-ratio:1 / 1; border-radius:10px; margin-bottom:10px; }
+    .menu-thumb img{ object-position:center center; }
+    .menu-item h3{ font-size:1.12rem; line-height:1.2; }
+    .menu-item p{ font-size:0.82rem; line-height:1.45; margin-top:5px; }
+    .menu-item .price{ font-size:1.3rem; }
+    .price-row{ flex-wrap:wrap; gap:8px; margin-top:10px; padding-top:10px; }
+    .add-cart-btn{ padding:9px 12px; font-size:0.68rem; letter-spacing:0.08em; }
+    .diet-select{ max-width:100%; font-size:0.72rem; margin-top:8px; }
     .cart-box{ padding:22px 16px; }
     .cart-item-header{ flex-wrap:wrap; gap:10px 14px; }
   }
@@ -376,17 +361,10 @@
   .tab .cart-badge{ margin-left:0; }
   .tab.is-active .cart-badge{ background:#fff; color:var(--teal); }
   .tabpanel[hidden]{ display:none; }
-  .feature{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:52px; align-items:center; max-width:1040px; margin:0 0 60px; }
-  .feature-img{ border-radius:18px; overflow:hidden; aspect-ratio:1 / 1; background:var(--beige); }
-  .feature-img img{ width:100%; height:100%; object-fit:cover; display:block; }
-  .feature-text h2{ font-size:clamp(2.2rem,3.6vw,3rem); font-style:italic; font-weight:500; line-height:1.08; margin:10px 0 12px; color:var(--ink); }
-  .feature-price{ font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1.9rem; color:var(--gold); }
-  .feature-meta{ margin:8px 0 0; font-size:0.9rem; color:var(--ink-soft); }
-  .feature-text > p:not(.feature-meta):not(.feature-q){ margin:18px 0 0; color:var(--ink-soft); max-width:46ch; }
-  .feature-q{ margin:20px 0 0; font-size:0.92rem; color:var(--ink-soft); }
-  .feature-q a{ color:var(--teal); text-decoration:underline; }
-  #tab-extras .menu-group-title, #tab-extras .menu-group-note{ display:none; }
   .tabpanel .section-head{ margin-bottom:28px; }
+  .tab-note{ margin:34px 0 0; font-size:0.92rem; color:var(--ink-soft); }
+  .tab-note a{ color:var(--teal); text-decoration:underline; }
+  .tab-note + .tabnav{ margin-top:18px; }
   .tabnav{ display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; max-width:1040px; margin-top:40px; padding-top:24px; border-top:1px solid var(--line); }
   .tabnav .btn[hidden]{ display:none; }
   .order-empty{ max-width:560px; padding:24px; background:var(--beige); border:1px solid var(--line); border-radius:6px; }
@@ -394,16 +372,22 @@
   .order-totals{ max-width:560px; border-top:1px solid var(--line); padding-bottom:4px; }
   .order-totals .cart-subtotal{ padding-top:8px; }
   .order-totals .cart-total{ margin-top:6px; }
-  @media (max-width:820px){
-    .feature{ grid-template-columns:1fr; gap:24px; margin-bottom:44px; }
-    .feature-img{ aspect-ratio:16 / 10; }
-  }
   @media (max-width:480px){
     .tabbar{ gap:6px; padding:10px 0; margin-bottom:26px; }
     .tab{ flex:1 1 0; min-width:0; padding:11px 2px; font-size:0.68rem; letter-spacing:0.06em; }
     .tab .cart-badge{ position:absolute; top:-7px; right:-3px; }
     .tabnav .btn{ padding-left:16px; padding-right:16px; }
   }
+  /* ---------- Cart bar: always in reach while browsing cakes and extras ---------- */
+  .cartbar{ position:fixed; left:0; right:0; bottom:0; z-index:60; display:flex; align-items:center; justify-content:space-between; gap:14px; padding:12px 22px calc(12px + env(safe-area-inset-bottom, 0px)); background:var(--ink); color:#fff; box-shadow:0 -8px 26px rgba(59,35,23,0.22); }
+  .cartbar[hidden]{ display:none; }
+  @media (min-width:901px){ .cartbar{ left:300px; } }
+  .cartbar-info{ display:flex; flex-direction:column; line-height:1.2; font-size:0.82rem; letter-spacing:0.04em; opacity:0.92; }
+  .cartbar-total{ font-family:'Cormorant Garamond',serif; font-size:1.6rem; font-style:italic; opacity:1; }
+  .cartbar-btn{ background:var(--teal); color:#fff; border:0; border-radius:999px; padding:14px 26px; font-family:'Jost',sans-serif; font-size:0.78rem; font-weight:500; letter-spacing:0.14em; text-transform:uppercase; cursor:pointer; white-space:nowrap; }
+  .cartbar-btn:hover{ filter:brightness(1.08); }
+  body.cartbar-on{ padding-bottom:88px; }
+  @media (max-width:480px){ .cartbar{ padding-left:16px; padding-right:16px; } .cartbar-btn{ padding:13px 18px; font-size:0.72rem; letter-spacing:0.1em; } }
   .checkout-note{
     background:var(--beige); border:1px solid var(--line); border-radius:6px;
     padding:16px 18px; font-size:0.9rem; color:var(--ink); line-height:1.5;
@@ -413,11 +397,6 @@
 </style>
 </head>
 <body>
-
-<a href="#review" class="floating-cart" aria-label="View cart">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1.4"/><circle cx="19" cy="21" r="1.4"/><path d="M2 3h2l2.6 12.6a2 2 0 0 0 2 1.6h8.8a2 2 0 0 0 2-1.6L21 8H6"/></svg>
-  <span id="cartBadgeFloat" class="cart-badge cart-badge-float" style="display:none;"></span>
-</a>
 
 <div class="page">
 
@@ -469,19 +448,12 @@
           <h1>Home Baked Goodness, always <span class="logo-script">Sticky</span>.</h1>
           <p class="lede">Baking comforting, homemade cakes — simple, delicious, and made to be shared. Our signature Sticky Date Cake with rich butterscotch sauce and fresh whipped cream, alongside a collection of honest home-baked favourites. Made fresh in small batches for pickup or delivery across Sydney.</p>
           <div class="hero-actions">
-            <a class="btn btn-solid" href="#menu">See the menu</a>
-            <a class="btn btn-outline" href="#order">Order a cake</a>
+            <a class="btn btn-solid" href="#order">Order a cake</a>
           </div>
         </div>
         <div class="hero-art">
           <img src="logo.png" alt="Sticky Home Baked Goodness logo, a teal badge with a slice of drip cake">
         </div>
-      </div>
-
-      <div class="section-head hero-menu-lead">
-        <div class="eyebrow">The menu</div>
-        <h2>Baked this week</h2>
-        <p>No fondant, no fuss — just properly good cake, made to share. Every whole cake below serves 8–10 people. Custom cakes for events are always welcome — send us an enquiry below.</p>
       </div>
     </section>
 
@@ -494,19 +466,6 @@
       </div>
 
       <div class="tabpanel" id="tab-cakes" role="tabpanel" aria-labelledby="tabbtn-cakes">
-      <div class="feature">
-        <div class="feature-img"><img src="photos/chocolate-strawberry-boxed.jpg" alt="A chocolate and strawberry cake, boxed and ready for pickup"></div>
-        <div class="feature-text">
-          <div class="eyebrow">Baked to order</div>
-          <h2>Home Baked Cakes</h2>
-          <div class="feature-price">From A$80</div>
-          <p class="feature-meta">Whole cakes serve 8–10 · Minis from A$6 each · Gift boxes A$15</p>
-          <p>Mixed by hand in small batches with real ingredients — nothing fake, nothing artificial. Choose Standard, Gluten Free or Dairy Free on each cake, then add it to your cart.</p>
-          <p class="feature-meta">Pickup in Neutral Bay · Delivery within Sydney</p>
-          <p class="feature-q">Questions? <a href="#enquiry">Send us an enquiry</a></p>
-        </div>
-      </div>
-
       <div class="menu-cols">
         <div>
           <h3 class="menu-group-title">Sticky Date Cakes</h3>
@@ -573,6 +532,7 @@
           </div>
         </div>
       </div>
+        <p class="tab-note">Planning something bigger? Custom cakes for events are always welcome — <a href="#enquiry">send us an enquiry</a>.</p>
         <div class="tabnav">
           <span></span>
           <button type="button" class="btn btn-outline" data-tab="extras">Next: Extras &rarr;</button>
@@ -580,18 +540,6 @@
       </div>
 
       <div class="tabpanel" id="tab-extras" role="tabpanel" aria-labelledby="tabbtn-extras" hidden>
-      <div class="feature">
-        <div class="feature-img"><img src="photos/gift-box.jpg" alt="A pink Happy Birthday balloon beside boxed slices of cake"></div>
-        <div class="feature-text">
-          <div class="eyebrow">Finishing touches</div>
-          <h2>Extras</h2>
-          <div class="feature-price">From A$10</div>
-          <p class="feature-meta">Balloons · Cake toppers · Cards · Flowers · Extra sauce &amp; cream · Plates &amp; cutlery</p>
-          <p>Add a little something extra to any order. Pop them in your cart alongside your cake and we'll pack everything together.</p>
-          <p class="feature-q">Something special in mind? <a href="#enquiry">Send us an enquiry</a></p>
-        </div>
-      </div>
-
       <div class="menu-cols">
         <div>
           <h3 class="menu-group-title">Extras</h3>
@@ -856,6 +804,11 @@
 
 </div>
 
+<div id="cartBar" class="cartbar" hidden>
+  <div class="cartbar-info"><span id="cartBarCount">0 items</span><span class="cartbar-total" id="cartBarTotal">A$0</span></div>
+  <button type="button" class="cartbar-btn" data-tab="review">Review &amp; checkout &rarr;</button>
+</div>
+
 <script>
   const sidebar = document.getElementById('sidebar');
   const toggle = document.getElementById('menuToggle');
@@ -909,6 +862,19 @@
       btn.setAttribute('aria-selected', on ? 'true' : 'false');
       btn.tabIndex = on ? 0 : -1;
     });
+    updateCartBar();
+  }
+
+  // The bar shows while browsing Cakes or Extras, once there is something in the cart.
+  function updateCartBar(){
+    const count = cart.reduce((n, i) => n + i.qty, 0);
+    const subtotal = cart.reduce((n, i) => n + (i.price || 0) * i.qty, 0);
+    const active = TABS.find((t) => !document.getElementById('tab-' + t).hidden);
+    const show = count > 0 && (active === 'cakes' || active === 'extras');
+    document.getElementById('cartBar').hidden = !show;
+    document.body.classList.toggle('cartbar-on', show);
+    document.getElementById('cartBarCount').textContent = count + (count === 1 ? ' item' : ' items');
+    document.getElementById('cartBarTotal').textContent = 'A$' + subtotal;
   }
 
   // Bring the top of the shop area into view. For tab clicks this only
@@ -959,7 +925,6 @@
       }
     });
   });
-  if (TAB_LINKS[location.hash.slice(1)]) showTab(TAB_LINKS[location.hash.slice(1)]);
 
   // ---------- Cart ----------
   let cart = [];
@@ -1034,6 +999,8 @@
       if (totalCount > 0){ badge.textContent = totalCount; badge.style.display = 'inline-flex'; }
       else { badge.style.display = 'none'; }
     });
+
+    updateCartBar();
 
     // With nothing in the cart, the Order tab shows a nudge instead of the form.
     const isEmpty = cart.length === 0;
@@ -1321,6 +1288,7 @@
 
   // Set the starting state of the cart / Order tab
   renderCart();
+  if (TAB_LINKS[location.hash.slice(1)]) showTab(TAB_LINKS[location.hash.slice(1)]);
 </script>
 
 
