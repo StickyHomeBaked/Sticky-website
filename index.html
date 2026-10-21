@@ -353,8 +353,8 @@
   .quote-status{ color:#9b3b3b; }
   /* ---------- Tabs: Cakes / Extras / Review / Order ---------- */
   .shop{ padding:28px 0 72px; }
-  .tabbar{ position:sticky; top:0; z-index:30; display:flex; justify-content:center; gap:10px; margin:0 0 34px; padding:14px 0; background:var(--paper); }
-  .tab{ position:relative; flex:0 0 auto; display:flex; align-items:center; justify-content:center; gap:8px; padding:12px 26px; background:transparent; border:1px solid var(--line); border-radius:999px; font-family:'Jost',sans-serif; font-size:0.78rem; font-weight:500; letter-spacing:0.14em; text-transform:uppercase; color:var(--ink-soft); cursor:pointer; transition:background .15s, color .15s, border-color .15s; }
+  .tabbar{ position:sticky; top:0; z-index:30; display:flex; flex-wrap:wrap; justify-content:center; gap:8px; margin:0 0 34px; padding:14px 0; background:var(--paper); }
+  .tab{ position:relative; flex:0 0 auto; display:flex; align-items:center; justify-content:center; gap:8px; padding:12px 18px; background:transparent; border:1px solid var(--line); border-radius:999px; font-family:'Jost',sans-serif; font-size:0.76rem; font-weight:500; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft); cursor:pointer; transition:background .15s, color .15s, border-color .15s; }
   .tab:hover{ border-color:var(--teal); color:var(--ink); }
   .tab.is-active{ background:var(--teal); border-color:var(--teal); color:#fff; }
   .tab:focus-visible{ outline:2px solid var(--teal); outline-offset:2px; }
@@ -372,9 +372,15 @@
   .order-totals{ max-width:560px; border-top:1px solid var(--line); padding-bottom:4px; }
   .order-totals .cart-subtotal{ padding-top:8px; }
   .order-totals .cart-total{ margin-top:6px; }
+  .tab-short{ display:none; }
+  /* shorter labels on phones and on narrower desktop windows, so all five tabs fit on one row */
+  @media (max-width:700px), (min-width:901px) and (max-width:1180px){
+    .tab-long{ display:none; }
+    .tab-short{ display:inline; }
+  }
   @media (max-width:480px){
-    .tabbar{ gap:6px; padding:10px 0; margin-bottom:26px; }
-    .tab{ flex:1 1 0; min-width:0; padding:11px 2px; font-size:0.68rem; letter-spacing:0.06em; }
+    .tabbar{ gap:4px; padding:10px 0; margin-bottom:26px; }
+    .tab{ flex:1 1 auto; min-width:0; padding:10px 6px; font-size:0.62rem; letter-spacing:0.01em; }
     .tab .cart-badge{ position:absolute; top:-7px; right:-3px; }
     .tabnav .btn{ padding-left:16px; padding-right:16px; }
   }
@@ -459,13 +465,14 @@
 
     <section id="shop" class="shop">
       <div class="tabbar" role="tablist" aria-label="Order steps">
-        <button type="button" class="tab is-active" role="tab" id="tabbtn-cakes" aria-controls="tab-cakes" aria-selected="true" data-tab="cakes">Cakes</button>
+        <button type="button" class="tab is-active" role="tab" id="tabbtn-sticky" aria-controls="tab-sticky" aria-selected="true" data-tab="sticky"><span class="tab-long">Sticky Date Cakes</span><span class="tab-short">Sticky Date</span></button>
+        <button type="button" class="tab" role="tab" id="tabbtn-more" aria-controls="tab-more" aria-selected="false" tabindex="-1" data-tab="more"><span class="tab-long">More Cakes</span><span class="tab-short">More</span></button>
         <button type="button" class="tab" role="tab" id="tabbtn-extras" aria-controls="tab-extras" aria-selected="false" tabindex="-1" data-tab="extras">Extras</button>
         <button type="button" class="tab" role="tab" id="tabbtn-review" aria-controls="tab-review" aria-selected="false" tabindex="-1" data-tab="review">Review<span id="cartBadgeTab" class="cart-badge" style="display:none;"></span></button>
         <button type="button" class="tab" role="tab" id="tabbtn-order" aria-controls="tab-order" aria-selected="false" tabindex="-1" data-tab="order">Order</button>
       </div>
 
-      <div class="tabpanel" id="tab-cakes" role="tabpanel" aria-labelledby="tabbtn-cakes">
+      <div class="tabpanel" id="tab-sticky" role="tabpanel" aria-labelledby="tabbtn-sticky">
       <div class="menu-cols">
         <div>
           <h3 class="menu-group-title">Sticky Date Cakes</h3>
@@ -496,7 +503,16 @@
             <div class="price-row"><div class="price">A$6 each</div><button type="button" class="add-cart-btn" data-name="Mini Sticky Date Cakes" data-price="6" data-min-qty="6">Add to Cart</button></div>
           </div>
         </div>
+      </div>
+        <p class="tab-note">Planning something bigger? Custom cakes for events are always welcome — <a href="#enquiry">send us an enquiry</a>.</p>
+        <div class="tabnav">
+          <span></span>
+          <button type="button" class="btn btn-outline" data-tab="more">Next: More Cakes &rarr;</button>
+        </div>
+      </div>
 
+      <div class="tabpanel" id="tab-more" role="tabpanel" aria-labelledby="tabbtn-more" hidden>
+      <div class="menu-cols">
         <div>
           <h3 class="menu-group-title">Home Baked Favourites</h3>
           <p class="menu-group-note">Whole cakes serve 8–10</p>
@@ -534,7 +550,7 @@
       </div>
         <p class="tab-note">Planning something bigger? Custom cakes for events are always welcome — <a href="#enquiry">send us an enquiry</a>.</p>
         <div class="tabnav">
-          <span></span>
+          <button type="button" class="btn btn-outline" data-tab="sticky">&larr; Sticky Date Cakes</button>
           <button type="button" class="btn btn-outline" data-tab="extras">Next: Extras &rarr;</button>
         </div>
       </div>
@@ -587,14 +603,14 @@
         </div>
       </div>
         <div class="tabnav">
-          <button type="button" class="btn btn-outline" data-tab="cakes">&larr; Cakes</button>
+          <button type="button" class="btn btn-outline" data-tab="more">&larr; More Cakes</button>
           <button type="button" class="btn btn-solid" data-tab="review">Review your cart &rarr;</button>
         </div>
       </div>
 
       <div class="tabpanel" id="tab-review" role="tabpanel" aria-labelledby="tabbtn-review" hidden>
       <div class="section-head">
-        <div class="eyebrow">Step 3</div>
+        <div class="eyebrow">Step 4</div>
         <h2>Review your cart</h2>
         <p>Check your items and quantities, then continue to your details.</p>
       </div>
@@ -609,21 +625,21 @@
       </div>
 
         <div class="tabnav">
-          <button type="button" class="btn btn-outline" data-tab="cakes">&larr; Keep shopping</button>
+          <button type="button" class="btn btn-outline" data-tab="sticky">&larr; Keep shopping</button>
           <button type="button" class="btn btn-solid" id="toOrderBtn" data-tab="order" hidden>Continue to order &rarr;</button>
         </div>
       </div>
 
       <div class="tabpanel" id="tab-order" role="tabpanel" aria-labelledby="tabbtn-order" hidden>
       <div class="section-head">
-        <div class="eyebrow">Step 4</div>
+        <div class="eyebrow">Step 5</div>
         <h2>Your details</h2>
         <p>Order by 3pm for next-day pickup or delivery. After 3pm, the earliest date is the day after tomorrow. Custom cakes need at least 72 hours' notice — send us an enquiry below.</p>
       </div>
 
       <div id="orderEmpty" class="order-empty">
         <p>Your cart is empty, so there's nothing to order yet.</p>
-        <button type="button" class="btn btn-outline" data-tab="cakes">Choose cakes</button>
+        <button type="button" class="btn btn-outline" data-tab="sticky">Choose cakes</button>
       </div>
 
       <form aria-label="Cake order form" id="orderForm" style="display:none;">
@@ -851,7 +867,7 @@
   });
 
   // ---------- Tabs: Cakes / Extras / Review / Order ----------
-  const TABS = ['cakes', 'extras', 'review', 'order'];
+  const TABS = ['sticky', 'more', 'extras', 'review', 'order'];
 
   function showTab(name){
     TABS.forEach((t) => {
@@ -870,7 +886,7 @@
     const count = cart.reduce((n, i) => n + i.qty, 0);
     const subtotal = cart.reduce((n, i) => n + (i.price || 0) * i.qty, 0);
     const active = TABS.find((t) => !document.getElementById('tab-' + t).hidden);
-    const show = count > 0 && (active === 'cakes' || active === 'extras');
+    const show = count > 0 && (active === 'sticky' || active === 'more' || active === 'extras');
     document.getElementById('cartBar').hidden = !show;
     document.body.classList.toggle('cartbar-on', show);
     document.getElementById('cartBarCount').textContent = count + (count === 1 ? ' item' : ' items');
@@ -906,12 +922,12 @@
 
   // ---------- Reliable in-page anchor scrolling ----------
   // Links like "See the menu" and "Order a cake" open the right tab.
-  const TAB_LINKS = { menu: 'cakes', extras: 'extras', review: 'review' };
+  const TAB_LINKS = { menu: 'sticky', extras: 'extras', review: 'review' };
   document.querySelectorAll('a[href^="#"]').forEach(a => {
     a.addEventListener('click', function(e){
       const id = this.getAttribute('href').slice(1);
       let tab = TAB_LINKS[id];
-      if (id === 'order') tab = cart.length ? 'review' : 'cakes';
+      if (id === 'order') tab = cart.length ? 'review' : 'sticky';
       if (tab){
         e.preventDefault();
         showTab(tab);
