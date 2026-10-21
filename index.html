@@ -466,10 +466,10 @@
     <section id="shop" class="shop">
       <div class="tabbar" role="tablist" aria-label="Order steps">
         <button type="button" class="tab is-active" role="tab" id="tabbtn-sticky" aria-controls="tab-sticky" aria-selected="true" data-tab="sticky"><span class="tab-long">Sticky Date Cakes</span><span class="tab-short">Sticky Date</span></button>
-        <button type="button" class="tab" role="tab" id="tabbtn-more" aria-controls="tab-more" aria-selected="false" tabindex="-1" data-tab="more"><span class="tab-long">More Cakes</span><span class="tab-short">More</span></button>
+        <button type="button" class="tab" role="tab" id="tabbtn-more" aria-controls="tab-more" aria-selected="false" tabindex="-1" data-tab="more"><span class="tab-long">Other Cakes</span><span class="tab-short">Other</span></button>
         <button type="button" class="tab" role="tab" id="tabbtn-extras" aria-controls="tab-extras" aria-selected="false" tabindex="-1" data-tab="extras">Extras</button>
-        <button type="button" class="tab" role="tab" id="tabbtn-review" aria-controls="tab-review" aria-selected="false" tabindex="-1" data-tab="review">Review<span id="cartBadgeTab" class="cart-badge" style="display:none;"></span></button>
-        <button type="button" class="tab" role="tab" id="tabbtn-order" aria-controls="tab-order" aria-selected="false" tabindex="-1" data-tab="order">Order</button>
+        <button type="button" class="tab" role="tab" id="tabbtn-review" aria-controls="tab-review" aria-selected="false" tabindex="-1" data-tab="review">Cart<span id="cartBadgeTab" class="cart-badge" style="display:none;"></span></button>
+        <button type="button" class="tab" role="tab" id="tabbtn-order" aria-controls="tab-order" aria-selected="false" tabindex="-1" data-tab="order">Checkout</button>
       </div>
 
       <div class="tabpanel" id="tab-sticky" role="tabpanel" aria-labelledby="tabbtn-sticky">
@@ -507,7 +507,7 @@
         <p class="tab-note">Planning something bigger? Custom cakes for events are always welcome — <a href="#enquiry">send us an enquiry</a>.</p>
         <div class="tabnav">
           <span></span>
-          <button type="button" class="btn btn-outline" data-tab="more">Next: More Cakes &rarr;</button>
+          <button type="button" class="btn btn-outline" data-tab="more">Next: Other Cakes &rarr;</button>
         </div>
       </div>
 
@@ -603,21 +603,20 @@
         </div>
       </div>
         <div class="tabnav">
-          <button type="button" class="btn btn-outline" data-tab="more">&larr; More Cakes</button>
-          <button type="button" class="btn btn-solid" data-tab="review">Review your cart &rarr;</button>
+          <button type="button" class="btn btn-outline" data-tab="more">&larr; Other Cakes</button>
+          <button type="button" class="btn btn-solid" data-tab="review">View your cart &rarr;</button>
         </div>
       </div>
 
       <div class="tabpanel" id="tab-review" role="tabpanel" aria-labelledby="tabbtn-review" hidden>
       <div class="section-head">
         <div class="eyebrow">Step 4</div>
-        <h2>Review your cart</h2>
-        <p>Check your items and quantities, then continue to your details.</p>
+        <h2>Your cart</h2>
+        <p>Check your items and quantities, then continue to checkout.</p>
       </div>
 
       <div class="cart-box">
-        <h3 class="cart-title">Your cart</h3>
-        <div id="cartEmpty" class="cart-empty">Your cart is empty — add cakes or extras from the Cakes and Extras tabs.</div>
+        <div id="cartEmpty" class="cart-empty">Your cart is empty — add cakes or extras from the tabs above.</div>
         <div id="cartItems"></div>
         <div id="cartSubtotal" class="cart-subtotal" style="display:none;"></div>
         <div id="cartDelivery" class="cart-subtotal cart-line" style="display:none;"></div>
@@ -626,14 +625,14 @@
 
         <div class="tabnav">
           <button type="button" class="btn btn-outline" data-tab="sticky">&larr; Keep shopping</button>
-          <button type="button" class="btn btn-solid" id="toOrderBtn" data-tab="order" hidden>Continue to order &rarr;</button>
+          <button type="button" class="btn btn-solid" id="toOrderBtn" data-tab="order" hidden>Continue to checkout &rarr;</button>
         </div>
       </div>
 
       <div class="tabpanel" id="tab-order" role="tabpanel" aria-labelledby="tabbtn-order" hidden>
       <div class="section-head">
         <div class="eyebrow">Step 5</div>
-        <h2>Your details</h2>
+        <h2>Checkout</h2>
         <p>Order by 3pm for next-day pickup or delivery. After 3pm, the earliest date is the day after tomorrow. Custom cakes need at least 72 hours' notice — send us an enquiry below.</p>
       </div>
 
@@ -822,7 +821,7 @@
 
 <div id="cartBar" class="cartbar" hidden>
   <div class="cartbar-info"><span id="cartBarCount">0 items</span><span class="cartbar-total" id="cartBarTotal">A$0</span></div>
-  <button type="button" class="cartbar-btn" data-tab="review">Review &amp; checkout &rarr;</button>
+  <button type="button" class="cartbar-btn" data-tab="review">Cart &amp; checkout &rarr;</button>
 </div>
 
 <script>
@@ -1166,7 +1165,7 @@
     e.preventDefault();
 
     if (cart.length === 0){
-      alert('Your cart is empty — add something from the Cakes or Extras tab before checking out.');
+      alert('Your cart is empty — add a cake or an extra before checking out.');
       return;
     }
 
