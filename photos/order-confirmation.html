@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Order Confirmed — Sticky Home Baked Goodness</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,500&family=Jost:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  body{
+    font-family:'Jost', sans-serif; background:#FBF3E1; color:#3B2317;
+    max-width:600px; margin:0 auto; padding:64px 24px; line-height:1.6;
+  }
+  h1{ font-family:'Cormorant Garamond', serif; font-style:italic; font-size:2.4rem; margin:0 0 12px; }
+  .box{ background:#EDE4CF; border-radius:8px; padding:24px 26px; margin:28px 0; }
+  .item{ display:flex; justify-content:space-between; padding:9px 0; border-bottom:1px solid rgba(59,35,23,0.15); font-size:0.96rem; }
+  .item:last-child{ border-bottom:none; }
+  .ref{ color:#8A7461; font-size:0.85rem; margin-top:6px; }
+  .row{ display:flex; justify-content:space-between; gap:16px; padding:9px 0; border-bottom:1px solid rgba(59,35,23,0.15); font-size:0.96rem; }
+  .row:last-child{ border-bottom:none; }
+  .row .k{ color:#8A7461; }
+  .row.total{ font-weight:500; font-size:1.05rem; }
+  .diet{ color:#C48C97; font-size:0.78rem; text-transform:uppercase; letter-spacing:0.05em; }
+  a{ color:#00AEB7; }
+</style>
+</head>
+<body>
+  <h1>Thank you!</h1>
+  <p id="summaryText">Your payment was received and your order is confirmed. A receipt has been sent to your email by Square.</p>
+
+  <div class="box" id="itemsBox" style="display:none;">
+    <div id="itemsList"></div>
+  </div>
+
+  <div class="box" id="detailsBox" style="display:none;">
+    <div id="detailsList"></div>
+  </div>
+
+  <p>If anything looks wrong, or you need to change your order, please get in touch at
+    <a href="mailto:stickyhomebaked@gmail.com">stickyhomebaked@gmail.com</a> or
+    <a href="tel:0403207894">0403 207 894</a> with your name and the date you need your order.
+  </p>
+
+<script>
+  // Builds a row using textContent (never innerHTML) so nothing a customer
+  // typed can ever be treated as page code.
+  function row(parent, left, right, cls, leftClass) {
+    const r = document.createElement('div');
+    r.className = 'row' + (cls ? ' ' + cls : '');
+    const l = document.createElement('span');
+    if (leftClass) l.className = leftClass;
+    l.textContent = left;
+    r.appendChild(l);
+    if (right !== undefined && right !== null) {
+      const rt = document.createElement('span');
+      rt.textContent = right;
+      r.appendChild(rt);
+    }
+    parent.appendChild(r);
+    return r;
+  }
+  const money = (cents) => 'A$' + (cents / 100).toFixed(2);
+
+  let saved = null;
+  try { saved = JSON.parse(sessionStorage.getItem('stickyLastOrder') || 'null'); } catch (e) {}
+
+  // If this was opened on a different device or after the browser was closed,
+  // the details won't be here — the payment itself is still fully valid, and
+  // the full order is in the receipt email from Square.
+  if (saved && Array.isArray(saved.items) && saved.items.length) {
+    document.getElementById('itemsBox').style.display = 'block';
+    const list = document.getElementById('itemsList');
+    saved.items.forEach((i) => {
+      const r = row(list, i.qty + ' × ' + i.name, typeof i.price === 'number' ? money(i.price * i.qty * 100) : '');
+      if (i.diet && i.diet !== 'Standard') {
+        const d = document.createElement('span');
+        d.className = 'diet';
+        d.textContent = ' (' + i.diet + ')';
+        r.firstChild.appendChild(d);
+      }
+    });
+    if (saved.deliveryFeeCents) {
+      row(list, 'Delivery' + (saved.deliveryKm ? ' (' + saved.deliveryKm + ' km)' : ''), money(saved.deliveryFeeCents));
+    }
+    if (typeof saved.totalCents === 'number') {
+      row(list, 'Total', money(saved.totalCents), 'total');
+    }
+
+    const f = saved.fulfilment || {};
+    const details = document.getElementById('detailsList');
+    document.getElementById('detailsBox').style.display = 'block';
+    row(details, f.type === 'Delivery' ? 'Delivery' : 'Pickup', null, '', 'k');
+    if (f.type === 'Delivery' && f.address) row(details, 'Delivering to', f.address);
+    if (f.dateNeeded) row(details, 'Date needed', f.dateNeeded);
+    if (f.preferredTime) row(details, f.type === 'Delivery' ? 'Requested delivery time' : 'Requested pickup time', f.preferredTime);
+    row(details, f.type === 'Delivery'
+      ? 'Sticky will send confirmation of your delivery slot.'
+      : 'Sticky will confirm your pickup slot.', null, '', 'k');
+  }
+</script>
+</body>
+</html>
