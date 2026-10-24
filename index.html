@@ -378,14 +378,20 @@
   .quote-status{ color:#9b3b3b; }
   /* ---------- Tabs: Cakes / Extras / Review / Order ---------- */
   .shop{ padding:28px 0 72px; }
-  .tabbar{ position:sticky; top:0; z-index:30; display:flex; flex-wrap:wrap; justify-content:center; gap:10px; margin:0 -56px 34px; padding:16px 56px; background:var(--paper); box-shadow:0 1px 0 var(--line); }
-  .tab{ position:relative; flex:0 0 auto; display:flex; align-items:center; justify-content:center; gap:8px; padding:14px 22px; background:var(--beige); border:1px solid rgba(59,35,23,0.26); border-radius:999px; font-family:'Jost',sans-serif; font-size:0.8rem; font-weight:600; letter-spacing:0.09em; text-transform:uppercase; color:var(--ink); cursor:pointer; box-shadow:0 1px 3px rgba(59,35,23,0.12); transition:background .15s, color .15s, border-color .15s, box-shadow .15s; }
-  .tab:hover{ background:#E4D8BD; border-color:var(--teal); }
-  .tab.is-active{ background:var(--teal); border-color:var(--teal); color:#fff; box-shadow:0 4px 14px rgba(0,174,183,0.38); }
+  :root{ --teal-deep:#0A8F98; --band:#F4EBD7; }
+  .tabbar{ position:sticky; top:0; z-index:30; display:flex; align-items:center; justify-content:center; flex-wrap:wrap; margin:0 -56px 40px; padding:0 56px; background:var(--band); border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+  .tab{ position:relative; display:flex; align-items:center; justify-content:center; padding:21px clamp(12px, 2vw, 28px); background:none; border:0; border-radius:0; cursor:pointer; font-family:'Cormorant Garamond',Georgia,serif; font-size:1.22rem; font-weight:700; letter-spacing:0.01em; text-transform:none; color:#241309; transition:color .15s; }
+  .tab + .tab::before{ content:""; position:absolute; left:0; top:50%; width:1px; height:26px; margin-top:-13px; background:var(--line); }
+  .tab-label{ position:relative; display:inline-flex; align-items:center; padding:3px 0; }
+  .tab-label::after{ content:""; position:absolute; left:0; right:0; bottom:-8px; height:2px; background:transparent; transition:background .15s; }
+  .tab:hover{ color:#077C84; }
+  .tab:hover .tab-label::after{ background:var(--line); }
+  .tab.is-active{ color:#077C84; }
+  .tab.is-active .tab-label::after{ background:var(--teal); height:3px; }
   @media (max-width:900px){ .tabbar{ margin-left:-24px; margin-right:-24px; padding-left:24px; padding-right:24px; } }
-  .tab:focus-visible{ outline:2px solid var(--teal); outline-offset:2px; }
-  .tab .cart-badge{ margin-left:0; }
-  .tab.is-active .cart-badge{ background:#fff; color:var(--teal); }
+  .tab:focus-visible{ outline:2px solid var(--teal); outline-offset:-5px; }
+  .tab-cart svg{ display:block; width:26px; height:26px; }
+  .tab .cart-badge{ position:absolute; top:10px; right:19px; margin:0; font-family:'Jost',sans-serif; }
   .tabpanel[hidden]{ display:none; }
   .tabpanel .section-head{ margin-bottom:28px; }
   .tab-note{ margin:34px 0 0; font-size:0.92rem; color:var(--ink-soft); }
@@ -399,26 +405,24 @@
   .order-totals .cart-subtotal{ padding-top:8px; }
   .order-totals .cart-total{ margin-top:6px; }
   .tab-short{ display:none; }
-  /* shorter labels on phones and on narrower desktop windows, so all five tabs fit on one row */
-  /* laptops: slightly more compact tabs so the full names still fit on one row */
-  @media (min-width:1280px) and (max-width:1439px){
-    .tabbar{ gap:8px; }
-    .tab{ padding:13px 15px; font-size:0.76rem; letter-spacing:0.06em; }
-  }
+  /* laptops: slightly smaller type so the full names still fit on one row */
+  @media (min-width:1280px) and (max-width:1439px){ .tab{ font-size:1.12rem; padding-left:clamp(12px, 1.5vw, 22px); padding-right:clamp(12px, 1.5vw, 22px); } }
   /* smaller windows and phones: short names */
   @media (max-width:1279px){
     .tab-long{ display:none; }
     .tab-short{ display:inline; }
   }
-  @media (max-width:1040px){ .tabbar{ gap:7px; } .tab{ padding:12px 13px; font-size:0.73rem; letter-spacing:0.04em; gap:6px; } }
-  @media (max-width:640px){ .tabbar{ gap:6px; } .tab{ padding:11px 9px; font-size:0.68rem; letter-spacing:0.02em; } }
+  @media (max-width:1040px){ .tab{ font-size:1.14rem; padding-left:clamp(10px, 1.6vw, 18px); padding-right:clamp(10px, 1.6vw, 18px); } }
+  @media (max-width:700px){ .tab{ font-size:1.08rem; } }
   @media (max-width:480px){
-    .tabbar{ gap:4px; padding-top:10px; padding-bottom:10px; margin-bottom:26px; }
-    .tab{ flex:1 1 auto; min-width:0; padding:10px 6px; font-size:0.62rem; letter-spacing:0.01em; }
-    .tab .cart-badge{ position:absolute; top:-7px; right:-3px; }
+    .tabbar{ margin-bottom:26px; }
+    .tab{ flex:1 1 auto; min-width:0; padding:16px 5px; font-size:0.96rem; }
+    .tab + .tab::before{ height:22px; margin-top:-11px; }
+    .tab-cart svg{ width:23px; height:23px; }
+    .tab .cart-badge{ top:7px; right:5px; }
     .tabnav .btn{ padding-left:16px; padding-right:16px; }
   }
-  @media (max-width:359px){ .tab{ font-size:0.56rem; padding:10px 3px; letter-spacing:0; } .tabbar{ gap:3px; } }
+  @media (max-width:340px){ .tab{ font-size:0.84rem; padding:16px 3px; } .tab-cart svg{ width:21px; height:21px; } .tab .cart-badge{ right:2px; } }
   /* ---------- Cart bar: always in reach while browsing cakes and extras ---------- */
   .cartbar{ position:fixed; left:0; right:0; bottom:0; z-index:60; display:flex; align-items:center; justify-content:space-between; gap:14px; padding:12px 22px calc(12px + env(safe-area-inset-bottom, 0px)); background:var(--ink); color:#fff; box-shadow:0 -8px 26px rgba(59,35,23,0.22); }
   .cartbar[hidden]{ display:none; }
@@ -497,11 +501,11 @@
 
     <section id="shop" class="shop">
       <div class="tabbar" role="tablist" aria-label="Order steps">
-        <button type="button" class="tab is-active" role="tab" id="tabbtn-sticky" aria-controls="tab-sticky" aria-selected="true" data-tab="sticky"><span class="tab-long">Sticky Date Cakes</span><span class="tab-short">Sticky Date</span></button>
-        <button type="button" class="tab" role="tab" id="tabbtn-more" aria-controls="tab-more" aria-selected="false" tabindex="-1" data-tab="more"><span class="tab-long">The Cake Collection</span><span class="tab-short">Cakes</span></button>
-        <button type="button" class="tab" role="tab" id="tabbtn-desserts" aria-controls="tab-desserts" aria-selected="false" tabindex="-1" data-tab="desserts"><span class="tab-long">Dinner Party Desserts</span><span class="tab-short">Desserts</span></button>
-        <button type="button" class="tab" role="tab" id="tabbtn-extras" aria-controls="tab-extras" aria-selected="false" tabindex="-1" data-tab="extras"><span class="tab-long">Something Extra</span><span class="tab-short">Extras</span></button>
-        <button type="button" class="tab" role="tab" id="tabbtn-review" aria-controls="tab-review" aria-selected="false" tabindex="-1" data-tab="review">Cart<span id="cartBadgeTab" class="cart-badge" style="display:none;"></span></button>
+        <button type="button" class="tab is-active" role="tab" id="tabbtn-sticky" aria-controls="tab-sticky" aria-selected="true" data-tab="sticky"><span class="tab-label"><span class="tab-long">Sticky Date Cakes</span><span class="tab-short">Sticky Date</span></span></button>
+        <button type="button" class="tab" role="tab" id="tabbtn-more" aria-controls="tab-more" aria-selected="false" tabindex="-1" data-tab="more"><span class="tab-label"><span class="tab-long">The Cake Collection</span><span class="tab-short">Cakes</span></span></button>
+        <button type="button" class="tab" role="tab" id="tabbtn-desserts" aria-controls="tab-desserts" aria-selected="false" tabindex="-1" data-tab="desserts"><span class="tab-label"><span class="tab-long">Dinner Party Desserts</span><span class="tab-short">Desserts</span></span></button>
+        <button type="button" class="tab" role="tab" id="tabbtn-extras" aria-controls="tab-extras" aria-selected="false" tabindex="-1" data-tab="extras"><span class="tab-label"><span class="tab-long">Something Extra</span><span class="tab-short">Extras</span></span></button>
+        <button type="button" class="tab tab-cart" role="tab" id="tabbtn-review" aria-controls="tab-review" aria-selected="false" tabindex="-1" data-tab="review" aria-label="Cart"><span class="tab-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5.2 8.2h13.6l-1 11.3H6.2L5.2 8.2z"/><path d="M8.6 8.2V6.9a3.4 3.4 0 0 1 6.8 0v1.3"/></svg></span><span id="cartBadgeTab" class="cart-badge" style="display:none;"></span></button>
       </div>
 
       <div class="tabpanel" id="tab-sticky" role="tabpanel" aria-labelledby="tabbtn-sticky">
@@ -1089,6 +1093,8 @@
       if (totalCount > 0){ badge.textContent = totalCount; badge.style.display = 'inline-flex'; }
       else { badge.style.display = 'none'; }
     });
+    const cartTab = document.getElementById('tabbtn-review');
+    if (cartTab) cartTab.setAttribute('aria-label', totalCount > 0 ? `Cart, ${totalCount} ${totalCount === 1 ? 'item' : 'items'}` : 'Cart');
 
     updateCartBar();
 
