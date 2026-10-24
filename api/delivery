@@ -12,17 +12,38 @@
 //   3. The distance picks the fee (see FEE BANDS below).
 //
 // FEE BANDS (change the numbers here any time; amounts are in cents)
-//   up to and including 10 km  ->  A$12
-//   over 10 km, under 20 km    ->  A$15
-//   20 km or more              ->  A$20
+// These are set to cover the cost of running the car for the round trip
+// (roughly the ATO's 91c per km), not the time spent delivering.
+//   up to and including 5 km   ->  A$10
+//   over 5 km, up to 10 km     ->  A$22
+//   over 10 km, up to 20 km    ->  A$36
+//   over 20 km, up to 30 km    ->  A$55
+//   over 30 km                 ->  not offered online (asked to send an enquiry)
 
 // Centre of Neutral Bay (the suburb, not a street address).
 const ORIGIN = { lat: -33.8316, lon: 151.2189 };
 
+// We only deliver within Sydney. This is a rectangle drawn around the
+// metropolitan area — from Palm Beach in the north to the Royal National Park
+// in the south, and from Penrith/Richmond in the west to the coast. Anything
+// outside it is refused. Widen or tighten these numbers to change the area.
+const SYDNEY_BOUNDS = { south: -34.2, north: -33.45, west: 150.55, east: 151.35 };
+
+export function isInSydney(point) {
+  return (
+    point.lat >= SYDNEY_BOUNDS.south && point.lat <= SYDNEY_BOUNDS.north &&
+    point.lon >= SYDNEY_BOUNDS.west && point.lon <= SYDNEY_BOUNDS.east
+  );
+}
+
+// Furthest distance (in a straight line from Neutral Bay) we deliver to online.
+export const MAX_DELIVERY_KM = 30;
+
 export function feeCentsForDistanceKm(km) {
-  if (km <= 10) return 1200;
-  if (km < 20) return 1500;
-  return 2000;
+  if (km <= 5) return 1000;
+  if (km <= 10) return 2200;
+  if (km <= 20) return 3600;
+  return 5500; // 20 km up to MAX_DELIVERY_KM
 }
 
 export function haversineKm(a, b) {
@@ -101,6 +122,17 @@ export async function quoteDelivery(address) {
     throw new DeliveryError('Please enter your full delivery address (street, suburb and postcode).');
   }
   const point = await geocode(clean);
+  if (!isInSydney(point)) {
+    throw new DeliveryError(
+      "Sorry, we only deliver within Sydney. You're welcome to pick up from Neutral Bay, or send us an enquiry."
+    );
+  }
   const distanceKm = haversineKm(ORIGIN, point);
+  if (distanceKm > MAX_DELIVERY_KM) {
+    throw new DeliveryError(
+      `Sorry, that address is outside our online delivery area (up to ${MAX_DELIVERY_KM} km from Neutral Bay). ` +
+      "Please send us an enquiry and we'll see what we can do, or pick up from Neutral Bay."
+    );
+  }
   return { feeCents: feeCentsForDistanceKm(distanceKm), distanceKm };
 }
