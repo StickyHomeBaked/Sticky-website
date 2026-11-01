@@ -69,7 +69,7 @@
   .btn-outline:hover{background:var(--teal); color:var(--paper);}
 
   /* ================= Page frame: header across the top, content below ================= */
-  :root{ --gutter:clamp(20px, 5vw, 64px); --pad:max(var(--gutter), calc((100% - 1200px) / 2)); --hpad:max(var(--gutter), calc((100% - 1400px) / 2)); --hdr-h:104px; --badge:clamp(150px, 12.5vw, 176px); }
+  :root{ --gutter:clamp(20px, 5vw, 64px); --pad:max(var(--gutter), calc((100% - 1200px) / 2)); --hpad:max(var(--gutter), calc((100% - 1400px) / 2)); --hdr-h:104px; --badge:clamp(160px, 13.4vw, 196px); }
   .page{ display:block; }
   .content{ min-width:0; padding:0; }
   section{ padding:72px var(--pad); }
@@ -86,7 +86,7 @@
   .site-header{ position:sticky; top:0; z-index:50; background:var(--paper); border-bottom:1px solid var(--line); display:flex; align-items:center; justify-content:flex-end; padding:0 var(--hpad); }
   .hdr-row1{ position:static; flex:0 0 auto; margin-right:auto; width:calc(var(--badge) + 28px); height:104px; }
   .brand{ position:absolute; left:var(--hpad); top:8px; z-index:60; display:block; width:var(--badge); height:var(--badge); text-decoration:none; transition:width .25s ease, height .25s ease, top .25s ease; }
-  .brand-badge{ display:block; width:100%; height:100%; box-sizing:border-box; padding:5px; object-fit:contain; border-radius:50%; background:#fff; box-shadow:0 0 0 5px #fff, 0 10px 26px rgba(40,22,8,0.28); transition:box-shadow .25s ease; }
+  .brand-badge{ display:block; width:100%; height:100%; object-fit:contain; filter:drop-shadow(0 8px 14px rgba(40,22,8,0.32)); transition:filter .25s ease; }
   .header-contact{ display:none; align-items:center; gap:10px; font-size:0.9rem; color:var(--ink-soft); }
   .header-contact a{ color:inherit; text-decoration:none; }
   .header-contact a:hover{ color:var(--teal-deep, #0A8F98); }
@@ -95,7 +95,7 @@
   /* wide screens: the logo hangs over the banner; once you scroll it shrinks to sit inside the bar */
   @media (min-width:1000px){
     .site-header.is-scrolled .brand{ width:72px; height:72px; top:16px; }
-    .site-header.is-scrolled .brand-badge{ box-shadow:0 0 0 3px #fff, 0 4px 12px rgba(40,22,8,0.2); padding:3px; }
+    .site-header.is-scrolled .brand-badge{ filter:drop-shadow(0 3px 6px rgba(40,22,8,0.25)); }
   }
 
   /* ---------- Footer ---------- */
@@ -366,7 +366,7 @@
   @media (min-width:1000px) and (max-width:1279px){ .tab{ font-size:0.92rem; } }
   /* tablets: the logo sits in its own row, the tabs get a band below it; only the band stays when scrolling */
   @media (max-width:999px){
-    :root{ --badge:96px; }
+    :root{ --badge:102px; }
     .site-header{ display:block; padding:0; top:-112px; }
     .hdr-row1{ position:relative; width:100%; height:112px; margin:0; padding:0 var(--hpad); display:flex; align-items:center; justify-content:flex-end; }
     .header-contact{ display:flex; }
@@ -376,7 +376,7 @@
   }
   /* phones: the tabs scroll sideways, with the bag always in view on the right */
   @media (max-width:760px){
-    :root{ --badge:64px; }
+    :root{ --badge:68px; }
     .site-header{ top:-80px; }
     .hdr-row1{ height:80px; padding:0 var(--gutter); }
     .brand{ left:var(--gutter); top:8px; }
