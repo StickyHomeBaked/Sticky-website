@@ -69,7 +69,7 @@
   .btn-outline:hover{background:var(--teal); color:var(--paper);}
 
   /* ================= Page frame: header across the top, content below ================= */
-  :root{ --gutter:clamp(20px, 5vw, 64px); --pad:max(var(--gutter), calc((100% - 1200px) / 2)); --hpad:max(var(--gutter), calc((100% - 1400px) / 2)); --hdr-h:104px; --badge:clamp(160px, 13.4vw, 196px); }
+  :root{ --gutter:clamp(20px, 5vw, 64px); --pad:max(var(--gutter), calc((100% - 1200px) / 2)); --hpad:max(var(--gutter), calc((100% - 1400px) / 2)); --hdr-h:104px; --badge:clamp(150px, 13.4vw, 196px); }
   .page{ display:block; }
   .content{ min-width:0; padding:0; }
   section{ padding:72px var(--pad); }
@@ -363,7 +363,7 @@
   @media (min-width:1280px) and (max-width:1459px){ .tab{ font-size:0.86rem; padding-left:9px; padding-right:9px; } }
   /* 1000 to 1279: shorter names */
   @media (max-width:1279px){ .tab-long{ display:none; } .tab-short{ display:inline; } }
-  @media (min-width:1000px) and (max-width:1279px){ .tab{ font-size:0.92rem; } }
+  @media (min-width:1000px) and (max-width:1279px){ .tab{ font-size:0.9rem; padding-left:8px; padding-right:8px; } }
   /* tablets: the logo sits in its own row, the tabs get a band below it; only the band stays when scrolling */
   @media (max-width:999px){
     :root{ --badge:102px; }
@@ -409,13 +409,10 @@
 
   select option{ background:var(--paper); color:var(--ink); }
 
-  /* ---------- Extras that can be ticked on a Sticky Date cake ---------- */
-  .extras-opt{ display:flex; flex-direction:column; gap:8px; margin-top:14px; }
-  .extras-opt label{ display:flex; align-items:flex-start; gap:9px; cursor:pointer; font-size:0.9rem; line-height:1.3; color:var(--ink); }
-  .extras-opt input{ width:17px; height:17px; margin:1px 0 0; flex-shrink:0; accent-color:var(--teal); cursor:pointer; }
-  .extras-opt b{ font-weight:600; color:var(--gold); white-space:nowrap; }
+  /* ---------- Extras dropdown on a Sticky Date cake (sits under the Standard / Gluten Free one) ---------- */
+  .extras-select{ margin-top:12px; max-width:100%; }
   .cart-item-extras{ margin-top:3px; font-size:0.84rem; line-height:1.35; color:var(--ink-soft); }
-  @media (max-width:700px){ .extras-opt{ gap:6px; margin-top:10px; } .extras-opt label{ font-size:0.76rem; gap:7px; } .extras-opt input{ width:15px; height:15px; } }
+  @media (max-width:700px){ .extras-select{ margin-top:8px; font-size:0.66rem; letter-spacing:0.03em; } }
 </style>
 </head>
 <body>
@@ -476,22 +473,22 @@
           <p class="menu-group-note">Whole cakes serve 8–10</p>
           <div class="menu-item">
             <div class="menu-thumb"><img src="photos/sticky-date-original-light.jpg" alt="The Original"></div>
-            <div><h3>The Original</h3><p>Sticky Date Cake with butterscotch sauce and fresh whipped cream.</p><select class="diet-select" aria-label="Dietary option for The Original"><option>Standard</option><option>Gluten Free</option><option>Dairy Free</option></select><div class="extras-opt" role="group" aria-label="Extras for The Original"><label><input type="checkbox" class="extra-cb" data-extra="Extra Butterscotch Sauce" data-price="20"><span>Extra butterscotch sauce <b>+A$20</b></span></label><label><input type="checkbox" class="extra-cb" data-extra="Extra Fresh Whipped Cream" data-price="15"><span>Extra fresh whipped cream <b>+A$15</b></span></label></div></div>
+            <div><h3>The Original</h3><p>Sticky Date Cake with butterscotch sauce and fresh whipped cream.</p><select class="diet-select" aria-label="Dietary option for The Original"><option>Standard</option><option>Gluten Free</option><option>Dairy Free</option></select><select class="diet-select extras-select" aria-label="Extras for The Original"><option value="">No extras</option><option value="Extra Butterscotch Sauce">Extra butterscotch sauce +A$20</option><option value="Extra Fresh Whipped Cream">Extra whipped cream +A$15</option><option value="Extra Butterscotch Sauce|Extra Fresh Whipped Cream">Both extras +A$35</option></select></div>
             <div class="price-row"><div class="price">A$80</div><button type="button" class="add-cart-btn" data-name="The Original" data-price="80">Add to Cart</button></div>
           </div>
           <div class="menu-item">
             <div class="menu-thumb"><img src="photos/sticky-date-nutty.jpg" alt="Nutty"></div>
-            <div><h3>Nutty</h3><p>Sticky Date Cake topped with roasted pecans and hazelnuts, butterscotch sauce and fresh whipped cream.</p><select class="diet-select" aria-label="Dietary option for Nutty"><option>Standard</option><option>Gluten Free</option><option>Dairy Free</option></select><div class="extras-opt" role="group" aria-label="Extras for Nutty"><label><input type="checkbox" class="extra-cb" data-extra="Extra Butterscotch Sauce" data-price="20"><span>Extra butterscotch sauce <b>+A$20</b></span></label><label><input type="checkbox" class="extra-cb" data-extra="Extra Fresh Whipped Cream" data-price="15"><span>Extra fresh whipped cream <b>+A$15</b></span></label></div></div>
+            <div><h3>Nutty</h3><p>Sticky Date Cake topped with roasted pecans and hazelnuts, butterscotch sauce and fresh whipped cream.</p><select class="diet-select" aria-label="Dietary option for Nutty"><option>Standard</option><option>Gluten Free</option><option>Dairy Free</option></select><select class="diet-select extras-select" aria-label="Extras for Nutty"><option value="">No extras</option><option value="Extra Butterscotch Sauce">Extra butterscotch sauce +A$20</option><option value="Extra Fresh Whipped Cream">Extra whipped cream +A$15</option><option value="Extra Butterscotch Sauce|Extra Fresh Whipped Cream">Both extras +A$35</option></select></div>
             <div class="price-row"><div class="price">A$87</div><button type="button" class="add-cart-btn" data-name="Nutty" data-price="87">Add to Cart</button></div>
           </div>
           <div class="menu-item">
             <div class="menu-thumb"><img src="photos/spiced-pear.jpg" alt="Spiced Sticky Date Cake topped with spiced pears and whipped cream"></div>
-            <div><h3>Spiced</h3><p>Sticky Date Cake with hints of cinnamon, topped with spiced pears, butterscotch sauce and fresh whipped cream.</p><select class="diet-select" aria-label="Dietary option for Spiced"><option>Standard</option><option>Gluten Free</option><option>Dairy Free</option></select><div class="extras-opt" role="group" aria-label="Extras for Spiced"><label><input type="checkbox" class="extra-cb" data-extra="Extra Butterscotch Sauce" data-price="20"><span>Extra butterscotch sauce <b>+A$20</b></span></label><label><input type="checkbox" class="extra-cb" data-extra="Extra Fresh Whipped Cream" data-price="15"><span>Extra fresh whipped cream <b>+A$15</b></span></label></div></div>
+            <div><h3>Spiced</h3><p>Sticky Date Cake with hints of cinnamon, topped with spiced pears, butterscotch sauce and fresh whipped cream.</p><select class="diet-select" aria-label="Dietary option for Spiced"><option>Standard</option><option>Gluten Free</option><option>Dairy Free</option></select><select class="diet-select extras-select" aria-label="Extras for Spiced"><option value="">No extras</option><option value="Extra Butterscotch Sauce">Extra butterscotch sauce +A$20</option><option value="Extra Fresh Whipped Cream">Extra whipped cream +A$15</option><option value="Extra Butterscotch Sauce|Extra Fresh Whipped Cream">Both extras +A$35</option></select></div>
             <div class="price-row"><div class="price">A$87</div><button type="button" class="add-cart-btn" data-name="Spiced" data-price="87">Add to Cart</button></div>
           </div>
           <div class="menu-item">
             <div class="menu-thumb menu-thumb-empty"></div>
-            <div><h3>Crumble</h3><p>Sticky Date Cake topped with a buttery crumble, butterscotch sauce and fresh whipped cream.</p><select class="diet-select" aria-label="Dietary option for Crumble"><option>Standard</option><option>Gluten Free</option><option>Dairy Free</option></select><div class="extras-opt" role="group" aria-label="Extras for Crumble"><label><input type="checkbox" class="extra-cb" data-extra="Extra Butterscotch Sauce" data-price="20"><span>Extra butterscotch sauce <b>+A$20</b></span></label><label><input type="checkbox" class="extra-cb" data-extra="Extra Fresh Whipped Cream" data-price="15"><span>Extra fresh whipped cream <b>+A$15</b></span></label></div></div>
+            <div><h3>Crumble</h3><p>Sticky Date Cake topped with a buttery crumble, butterscotch sauce and fresh whipped cream.</p><select class="diet-select" aria-label="Dietary option for Crumble"><option>Standard</option><option>Gluten Free</option><option>Dairy Free</option></select><select class="diet-select extras-select" aria-label="Extras for Crumble"><option value="">No extras</option><option value="Extra Butterscotch Sauce">Extra butterscotch sauce +A$20</option><option value="Extra Fresh Whipped Cream">Extra whipped cream +A$15</option><option value="Extra Butterscotch Sauce|Extra Fresh Whipped Cream">Both extras +A$35</option></select></div>
             <div class="price-row"><div class="price">A$87</div><button type="button" class="add-cart-btn" data-name="Crumble" data-price="87">Add to Cart</button></div>
           </div>
           <div class="menu-item">
@@ -952,6 +949,7 @@
       }
     });
     updateCartBar();
+    if (typeof fitExtrasLabels === 'function') fitExtrasLabels();
   }
 
   // The bar shows while browsing Cakes or Extras, once there is something in the cart.
@@ -1021,6 +1019,8 @@
 
   // ---------- Cart ----------
   let cart = [];
+  // Prices of the optional extras on Sticky Date cakes (the server checks these again).
+  const EXTRA_PRICES = { 'Extra Butterscotch Sauce': 20, 'Extra Fresh Whipped Cream': 15 };
   // Price of one of an item, including any extras ticked on it.
   const unitPrice = (item) => item.price === null ? 0 : item.price + (item.extras || []).reduce((n, e) => n + e.price, 0);
 
@@ -1028,14 +1028,15 @@
     const name = btn.dataset.name;
     const price = btn.dataset.price ? parseFloat(btn.dataset.price) : null;
     const menuItem = btn.closest('.menu-item');
-    const dietSelect = menuItem ? menuItem.querySelector('.diet-select') : null;
+    const dietSelect = menuItem ? menuItem.querySelector('.diet-select:not(.extras-select)') : null;
     const diet = dietSelect ? dietSelect.value : 'Standard';
 
     // Gluten Free and Dairy Free are treated as a different line to Standard,
     // since they're a different thing to bake — not just a note on the same item.
     // Extras ticked on the card (extra sauce / cream on Sticky Date cakes).
     // The same cake with different extras is a separate line in the cart.
-    const extras = menuItem ? [...menuItem.querySelectorAll('.extra-cb:checked')].map(cb => ({ name: cb.dataset.extra, price: parseFloat(cb.dataset.price) })) : [];
+    const extrasSelect = menuItem ? menuItem.querySelector('.extras-select') : null;
+    const extras = extrasSelect && extrasSelect.value ? extrasSelect.value.split('|').map(n => ({ name: n, price: EXTRA_PRICES[n] })) : [];
     const extrasKey = (list) => (list || []).map(e => e.name).sort().join('|');
     const minQty = btn.dataset.minQty ? parseInt(btn.dataset.minQty, 10) : 0;
     const existing = cart.find(i => i.name === name && i.diet === diet && extrasKey(i.extras) === extrasKey(extras));
@@ -1087,15 +1088,42 @@
     }
   });
 
-  // The price on a cake's card follows what's ticked, e.g. A$80 -> A$100.
+  // The price on a cake's card follows the extras chosen, e.g. A$80 -> A$100.
   document.addEventListener('change', (e) => {
-    const cb = e.target.closest('.extra-cb');
-    if (!cb) return;
-    const card = cb.closest('.menu-item');
+    const sel = e.target.closest('.extras-select');
+    if (!sel) return;
+    const card = sel.closest('.menu-item');
     const base = parseFloat(card.querySelector('.add-cart-btn').dataset.price);
-    const more = [...card.querySelectorAll('.extra-cb:checked')].reduce((n, c) => n + parseFloat(c.dataset.price), 0);
+    const more = sel.value ? sel.value.split('|').reduce((n, name) => n + EXTRA_PRICES[name], 0) : 0;
     card.querySelector('.price').textContent = 'A$' + (base + more);
   });
+
+  // Each extras dropdown uses the longest wording that fits its card, so it never
+  // sticks out or gets cut off, whatever the screen size.
+  const EXTRA_LABELS = [
+    ['No extras', 'Extra butterscotch sauce +A$20', 'Extra whipped cream +A$15', 'Both extras +A$35'],
+    ['No extras', 'Extra sauce +A$20', 'Extra cream +A$15', 'Both extras +A$35'],
+    ['No extras', 'Sauce +A$20', 'Cream +A$15', 'Both +A$35'],
+  ];
+  const measureCtx = document.createElement('canvas').getContext('2d');
+  function fitExtrasLabels(){
+    document.querySelectorAll('.extras-select').forEach(sel => {
+      const card = sel.closest('.menu-item');
+      if (!card || card.clientWidth === 0) return;              // its tab isn't showing right now
+      const cs = getComputedStyle(sel);
+      measureCtx.font = `${cs.fontStyle} ${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;
+      const spacing = parseFloat(cs.letterSpacing) || 0;
+      const upper = cs.textTransform === 'uppercase';
+      const room = card.clientWidth - (parseFloat(cs.paddingLeft) || 0) - (parseFloat(cs.paddingRight) || 0) - 26;
+      const widest = (labels) => Math.max(...labels.map(t => measureCtx.measureText(upper ? t.toUpperCase() : t).width + spacing * t.length));
+      const set = EXTRA_LABELS.find(labels => widest(labels) <= room) || EXTRA_LABELS[EXTRA_LABELS.length - 1];
+      [...sel.options].forEach((o, i) => { if (o.textContent !== set[i]) o.textContent = set[i]; });
+    });
+  }
+  let fitTimer;
+  window.addEventListener('resize', () => { clearTimeout(fitTimer); fitTimer = setTimeout(fitExtrasLabels, 60); });
+  fitExtrasLabels();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitExtrasLabels);
 
   function renderCart(){
     const emptyEl = document.getElementById('cartEmpty');
