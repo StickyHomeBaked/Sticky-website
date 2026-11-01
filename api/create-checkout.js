@@ -3,7 +3,7 @@
 // access token, and the only place that decides the final price.
 
 import { randomUUID } from 'crypto';
-import { CATALOG } from '../lib/catalog.js';
+import { CATALOG, CAKE_EXTRAS } from '../lib/catalog.js';
 import { quoteDelivery, DeliveryError } from '../lib/delivery.js';
 
 const SQUARE_ENVIRONMENT = process.env.SQUARE_ENVIRONMENT || 'sandbox';
@@ -74,6 +74,24 @@ export default async function handler(req, res) {
       }
 
       const quantity = Math.max(1, parseInt(requested.quantity, 10) || 1);
+
+      // Optional extras (extra sauce / cream). Only cakes that offer them can
+      // take them, and the price always comes from the list in catalog.js.
+      const extraLines = [];
+      const requestedExtras = Array.isArray(requested.extras) ? [...new Set(requested.extras.map(String))] : [];
+      if (requestedExtras.length) {
+        if (!catalogItem.allowExtras) {
+          return res.status(400).json({ error: `Extras can't be added to \"${catalogItem.name}\".` });
+        }
+        for (const extraName of requestedExtras) {
+          const extra = CAKE_EXTRAS.find((x) => x.name === extraName);
+          if (!extra) {
+            return res.status(400).json({ error: `\"${extraName}\" isn't a recognised extra.` });
+          }
+          extraLines.push(extra);
+        }
+      }
+
       quantityByProduct[catalogItem.name] = (quantityByProduct[catalogItem.name] || 0) + quantity;
       itemsTotalCents += catalogItem.price * quantity;
 
@@ -86,6 +104,20 @@ export default async function handler(req, res) {
         },
         note: requested.note ? String(requested.note).slice(0, 500) : undefined,
       });
+
+      // Each extra goes on the order as its own line, once per cake.
+      for (const extra of extraLines) {
+        itemsTotalCents += extra.price * quantity;
+        lineItems.push({
+          name: `${extra.name} (for ${catalogItem.name})`,
+          quantity: String(quantity),
+          base_price_money: {
+            amount: extra.price,
+            currency: 'AUD',
+          },
+          note: requested.note ? String(requested.note).slice(0, 500) : undefined,
+        });
+      }
     }
 
     // ---- Minimum order quantities (e.g. 6 Mini Sticky Date Cakes). ----
