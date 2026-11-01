@@ -19,6 +19,7 @@
   .row:last-child{ border-bottom:none; }
   .row .k{ color:#8A7461; }
   .row.total{ font-weight:500; font-size:1.05rem; }
+  .row.extra{ padding-left:16px; font-size:0.88rem; color:#8A7461; }
   .diet{ color:#C48C97; font-size:0.78rem; text-transform:uppercase; letter-spacing:0.05em; }
   a{ color:#00AEB7; }
 </style>
@@ -77,6 +78,10 @@
         d.textContent = ' (' + i.diet + ')';
         r.firstChild.appendChild(d);
       }
+      // extras ticked on a cake (extra sauce / cream), each listed with its price
+      (i.extras || []).forEach((x) => {
+        row(list, '+ ' + x.name, money(x.price * i.qty * 100), 'extra');
+      });
     });
     if (saved.deliveryFeeCents) {
       row(list, 'Delivery' + (saved.deliveryKm ? ' (' + saved.deliveryKm + ' km)' : ''), money(saved.deliveryFeeCents));
