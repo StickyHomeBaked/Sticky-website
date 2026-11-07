@@ -413,6 +413,7 @@
   .extras-select{ margin-top:12px; max-width:100%; }
   .cart-item-extras{ margin-top:3px; font-size:0.84rem; line-height:1.35; color:var(--ink-soft); }
   @media (max-width:700px){ .extras-select{ margin-top:8px; font-size:0.66rem; letter-spacing:0.03em; } }
+  .privacy-note{ margin:14px 0 0; line-height:1.5; max-width:60ch; }
 </style>
 </head>
 <body>
@@ -813,7 +814,7 @@
         </div>
         <div class="field">
           <label for="message">Order notes (optional)</label>
-          <textarea id="message" name="message" placeholder="Allergies, wording for your cake topper, balloon or card, anything we should know about this order..."></textarea>
+          <textarea id="message" name="message" maxlength="500" placeholder="Allergies, wording for your cake topper, balloon or card, anything we should know about this order..."></textarea>
         </div>
         <div id="orderTotals" class="order-totals"></div>
         <div class="checkout-note">
@@ -821,6 +822,7 @@
           <span style="display:block; margin-top:10px; font-size:0.82rem; color:var(--ink-soft);">Allergens: our cakes are made in a home kitchen where gluten, dairy, nuts and other allergens are used. Gluten Free and Dairy Free options are made with care, but we can't guarantee any cake is completely free of allergens. Please tell us about any allergies in your order notes.</span>
         </div>
         <button class="btn btn-solid" type="submit">Checkout</button>
+        <p class="form-note privacy-note">We only use your details to make and deliver your order and to reply to your enquiries. We don't sell or share them. Payments are handled securely by Square, and we never see or store your card details.</p>
       </form>
 
         <div class="tabnav">
