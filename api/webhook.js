@@ -122,6 +122,12 @@ async function notifyOwnerOfPaidOrder(payment, order) {
   const lines = [];
   const meta = order?.metadata || {};
 
+  // "Requested pickup time" or "Requested delivery time", worked out from the order itself.
+  const timeLabel = meta.preferred_time_label
+    || (meta.fulfilment_type === 'Delivery' ? 'Requested delivery time' : meta.fulfilment_type === 'Pickup' ? 'Requested pickup time' : 'Preferred time');
+  // Long notes are stored in two pieces; put them back together.
+  const notes = [meta.customer_notes, meta.customer_notes_2].filter(Boolean).join('');
+
   const detailLines = [
     meta.website_ref ? `Order ref: ${meta.website_ref}` : null,
     meta.customer_name ? `Name: ${meta.customer_name}` : null,
@@ -130,8 +136,8 @@ async function notifyOwnerOfPaidOrder(payment, order) {
     meta.fulfilment_type ? `Fulfilment: ${meta.fulfilment_type}` : null,
     meta.delivery_address ? `Address: ${meta.delivery_address}` : null,
     meta.date_needed ? `Date needed: ${meta.date_needed}` : null,
-    meta.preferred_time ? `${meta.preferred_time_label || 'Preferred time'}: ${meta.preferred_time}` : null,
-    meta.customer_notes ? `Notes: ${meta.customer_notes}` : null,
+    meta.preferred_time ? `${timeLabel}: ${meta.preferred_time}` : null,
+    notes ? `Notes: ${notes}` : null,
   ].filter(Boolean);
 
   if (detailLines.length) {
