@@ -166,8 +166,11 @@ export default async function handler(req, res) {
     // information as its own metadata field on the order — metadata is
     // part of the core Order object and comes back intact when we fetch
     // the order later in the webhook.
+    // IMPORTANT: Square allows at most 10 entries here (keys up to 60 characters,
+    // values up to 255). The most this ever uses is exactly 10, so don't add more
+    // without removing one. The delivery distance is not stored here because it
+    // is already on the order as the "Delivery (X km)" line.
     const metadata = { website_ref: orderRef };
-    if (deliveryDistanceKm !== null) metadata.delivery_distance_km = String(deliveryDistanceKm);
     if (customer?.name) metadata.customer_name = String(customer.name).slice(0, 250);
     if (customer?.email) metadata.customer_email = String(customer.email).slice(0, 250);
     if (customer?.phone) metadata.customer_phone = String(customer.phone).slice(0, 250);
@@ -176,11 +179,16 @@ export default async function handler(req, res) {
       metadata.delivery_address = String(fulfilment.address).slice(0, 250);
     }
     if (fulfilment?.dateNeeded) metadata.date_needed = String(fulfilment.dateNeeded).slice(0, 250);
-    if (fulfilment?.preferredTime) {
-      metadata.preferred_time_label = fulfilment.type === 'Delivery' ? 'Requested delivery time' : 'Requested pickup time';
-      metadata.preferred_time = String(fulfilment.preferredTime).slice(0, 250);
+    if (fulfilment?.preferredTime) metadata.preferred_time = String(fulfilment.preferredTime).slice(0, 250);
+    // Order notes can be up to 500 characters: the first 250 go in one entry and any
+    // more in a second, and the order email joins them back together.
+    if (customer?.notes) {
+      const notes = String(customer.notes).trim().slice(0, 500);
+      if (notes) {
+        metadata.customer_notes = notes.slice(0, 250);
+        if (notes.length > 250) metadata.customer_notes_2 = notes.slice(250);
+      }
     }
-    if (customer?.notes) metadata.customer_notes = String(customer.notes).slice(0, 250);
 
     const requestBody = {
       idempotency_key: idempotencyKey,
