@@ -462,7 +462,7 @@
   .privacy-note{ margin:14px 0 0; line-height:1.5; max-width:60ch; }
 
   /* ---------- Common questions (collapsed list on the Enquiries page) ---------- */
-  .faq{ margin-top:72px; max-width:760px; }
+  .faq{ margin-top:72px; max-width:760px; scroll-margin-top:calc(var(--hdr-h, 100px) + 12px); }
   .faq .section-head{ margin-bottom:12px; }
   .faq-item{ border-bottom:1px solid var(--line); }
   .faq-item:first-of-type{ border-top:1px solid var(--line); }
@@ -1068,6 +1068,7 @@
         <a href="#gallery">Gallery</a>
         <a href="#enquiry">Enquiries</a>
         <a href="#about">Our Story</a>
+        <a href="#faq">FAQ</a>
       </div>
       <div class="footer-col">
         <h4 class="eyebrow">Contact</h4>
@@ -1224,7 +1225,7 @@
 
   // ---------- Reliable in-page anchor scrolling ----------
   // Links like "See the menu" and "Order a cake" open the right tab.
-  const TAB_LINKS = { menu: 'sticky', cakes: 'more', desserts: 'desserts', extras: 'extras', gallery: 'gallery', enquiry: 'enquiry', enquiries: 'enquiry', about: 'about', story: 'about', review: 'review' };
+  const TAB_LINKS = { menu: 'sticky', cakes: 'more', desserts: 'desserts', extras: 'extras', gallery: 'gallery', enquiry: 'enquiry', enquiries: 'enquiry', about: 'about', story: 'about', review: 'review', faq: 'enquiry' };
   document.querySelectorAll('a[href^="#"]').forEach(a => {
     a.addEventListener('click', function(e){
       const id = this.getAttribute('href').slice(1);
@@ -1233,7 +1234,8 @@
       if (tab){
         e.preventDefault();
         showTab(tab);
-        scrollToShop(true);
+        if (id === 'faq') document.getElementById('faq').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        else scrollToShop(true);
         return;
       }
       if (id === 'top'){
@@ -1663,6 +1665,8 @@
   // Set the starting state of the cart / Order tab
   renderCart();
   if (TAB_LINKS[location.hash.slice(1)]) showTab(TAB_LINKS[location.hash.slice(1)]);
+  // a link straight to #faq opens the Enquiries page and scrolls to the questions once the page has settled
+  if (location.hash === '#faq') setTimeout(() => document.getElementById('faq').scrollIntoView({ block: 'start' }), 400);
 </script>
 
 
