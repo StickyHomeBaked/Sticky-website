@@ -186,6 +186,8 @@
     #top.hero h1{ font-size:clamp(2.3rem, 9vw, 3rem); }
   }
   @media (max-width:600px){ #top.hero .eyebrow{ letter-spacing:0.2em; font-size:0.72rem; } }
+  /* phones: a smaller hero button */
+  @media (max-width:600px){ #top.hero .btn-solid{ padding:10px 18px; font-size:0.66rem; letter-spacing:0.12em; } #top.hero .hero-actions{ margin-top:16px; } }
 
   /* ---------- About (flows straight on from hero, no block change) ---------- */
   .about-grid{display:grid; grid-template-columns:0.75fr 1.25fr; gap:56px; align-items:start;}
@@ -536,7 +538,7 @@
         <p class="tab-note">Planning something bigger? Custom cakes for events are always welcome — <a href="#enquiry">send us an enquiry</a>.</p>
         <div class="tabnav">
           <span></span>
-          <button type="button" class="btn btn-outline" data-tab="more">Next: The Cake Collection &rarr;</button>
+          <button type="button" class="btn btn-solid" data-tab="more">Next: The Cake Collection &rarr;</button>
         </div>
       </div>
 
@@ -580,7 +582,7 @@
         <p class="tab-note">Planning something bigger? Custom cakes for events are always welcome — <a href="#enquiry">send us an enquiry</a>.</p>
         <div class="tabnav">
           <button type="button" class="btn btn-outline" data-tab="sticky">&larr; Sticky Date Cakes</button>
-          <button type="button" class="btn btn-outline" data-tab="desserts">Next: Dinner Party Desserts &rarr;</button>
+          <button type="button" class="btn btn-solid" data-tab="desserts">Next: Dinner Party Desserts &rarr;</button>
         </div>
       </div>
 
@@ -613,7 +615,7 @@
       </div>
         <div class="tabnav">
           <button type="button" class="btn btn-outline" data-tab="more">&larr; The Cake Collection</button>
-          <button type="button" class="btn btn-outline" data-tab="extras">Next: Finishing Touches &rarr;</button>
+          <button type="button" class="btn btn-solid" data-tab="extras">Next: Finishing Touches &rarr;</button>
         </div>
       </div>
 
