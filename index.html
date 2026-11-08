@@ -362,6 +362,7 @@
   .order-totals .cart-subtotal{ padding-top:8px; }
   .order-totals .cart-total{ margin-top:6px; }
   .tab-short{ display:none; }
+  .tab-two{ display:none; }
   /* room above the banner words so the hanging logo clears them */
   @media (min-width:1000px){ #top.hero{ padding-top:calc(var(--badge) - 42px); } }
   /* bigger tabs where there is room; more compact ones on smaller laptops so the full names still fit beside the logo */
@@ -395,8 +396,30 @@
     .menu-toggle:focus-visible{ outline:2px solid var(--teal); outline-offset:-4px; }
     .tabbar{ justify-content:flex-start; overflow-x:auto; padding:0; scrollbar-width:none; -webkit-overflow-scrolling:touch; }
     .tabbar::-webkit-scrollbar{ display:none; }
-    .tab{ flex:0 0 auto; padding:16px 13px; font-size:0.9rem; }
-    .tab-cart{ position:sticky; right:0; z-index:2; background:var(--band); box-shadow:-12px 0 10px -6px var(--band); }
+    /* phones: only the four shopping pages stay in the tab band (Gallery, Enquiries and Our Story are in the menu),
+       so each remaining tab has room to show its whole name */
+    #tabbtn-gallery, #tabbtn-enquiry, #tabbtn-about{ display:none; }
+    /* each shopping tab shows its full name over two lines (e.g. "Dinner Party" above "Desserts") */
+    .tab-short{ display:none !important; }
+    .tab-two{ display:inline-flex; flex-direction:column; align-items:center; text-align:center; line-height:1.18; }
+    .tab{ flex:1 1 auto; min-width:44px; padding:10px 2px; font-size:0.9rem; }
+    .tab-label::after{ bottom:-7px; }
+    .tab-cart{ flex:0 0 auto; padding-left:13px; padding-right:13px; position:relative; z-index:2; background:var(--band); box-shadow:none; }
+    /* lettering steps down with the screen so both lines of every name fit (measured with the real font) */
+    @media (max-width:430px){ .tab{ padding-left:4px; padding-right:4px; } .tab-cart{ padding-left:11px; padding-right:11px; } }
+    @media (max-width:429px){ .tab{ font-size:0.8125rem; } }
+    @media (max-width:411px){ .tab{ font-size:0.75rem; } }
+    @media (max-width:384px){ .tab{ font-size:0.7rem; } }
+    @media (max-width:367px){ .tab{ font-size:0.675rem; } }
+    /* very small phones (under 350px): two lines would be too tiny to read, so use the one-line short names instead */
+    @media (max-width:349px){
+      .tab-two{ display:none; }
+      .tab-short{ display:inline !important; }
+      .tab{ padding-top:16px; padding-bottom:16px; padding-left:3px; padding-right:3px; font-size:0.74rem; }
+      .tab-label::after{ bottom:-9px; }
+      .tab-cart{ padding-left:9px; padding-right:9px; }
+    }
+    @media (max-width:325px){ .tab{ font-size:0.68rem; } }
     .tab .cart-badge{ top:6px; right:3px; }
     /* the menu: a full-width sheet that fills the screen under the tab band, scrolling inside itself */
     body.menu-open{ overflow:hidden; }
@@ -456,10 +479,10 @@
         <svg class="icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
       </button>
     <div class="tabbar" role="tablist" aria-label="Sections">
-        <button type="button" class="tab is-active" role="tab" id="tabbtn-sticky" aria-controls="tab-sticky" aria-selected="true" data-tab="sticky"><span class="tab-label"><span class="tab-long">Sticky Date Cakes</span><span class="tab-short">Sticky Date</span></span></button>
-        <button type="button" class="tab" role="tab" id="tabbtn-more" aria-controls="tab-more" aria-selected="false" tabindex="-1" data-tab="more"><span class="tab-label"><span class="tab-long">The Cake Collection</span><span class="tab-short">Cakes</span></span></button>
-        <button type="button" class="tab" role="tab" id="tabbtn-desserts" aria-controls="tab-desserts" aria-selected="false" tabindex="-1" data-tab="desserts"><span class="tab-label"><span class="tab-long">Dinner Party Desserts</span><span class="tab-short">Desserts</span></span></button>
-        <button type="button" class="tab" role="tab" id="tabbtn-extras" aria-controls="tab-extras" aria-selected="false" tabindex="-1" data-tab="extras"><span class="tab-label"><span class="tab-long">Finishing Touches</span><span class="tab-short">Finishing</span></span></button>
+        <button type="button" class="tab is-active" role="tab" id="tabbtn-sticky" aria-controls="tab-sticky" aria-selected="true" data-tab="sticky" aria-label="Sticky Date Cakes"><span class="tab-label"><span class="tab-long">Sticky Date Cakes</span><span class="tab-short">Sticky Date</span><span class="tab-two" aria-hidden="true"><span>Sticky Date</span><span>Cakes</span></span></span></button>
+        <button type="button" class="tab" role="tab" id="tabbtn-more" aria-controls="tab-more" aria-selected="false" tabindex="-1" data-tab="more" aria-label="The Cake Collection"><span class="tab-label"><span class="tab-long">The Cake Collection</span><span class="tab-short">Cakes</span><span class="tab-two" aria-hidden="true"><span>The Cake</span><span>Collection</span></span></span></button>
+        <button type="button" class="tab" role="tab" id="tabbtn-desserts" aria-controls="tab-desserts" aria-selected="false" tabindex="-1" data-tab="desserts" aria-label="Dinner Party Desserts"><span class="tab-label"><span class="tab-long">Dinner Party Desserts</span><span class="tab-short">Desserts</span><span class="tab-two" aria-hidden="true"><span>Dinner Party</span><span>Desserts</span></span></span></button>
+        <button type="button" class="tab" role="tab" id="tabbtn-extras" aria-controls="tab-extras" aria-selected="false" tabindex="-1" data-tab="extras" aria-label="Finishing Touches"><span class="tab-label"><span class="tab-long">Finishing Touches</span><span class="tab-short">Finishing</span><span class="tab-two" aria-hidden="true"><span>Finishing</span><span>Touches</span></span></span></button>
         <button type="button" class="tab" role="tab" id="tabbtn-gallery" aria-controls="tab-gallery" aria-selected="false" tabindex="-1" data-tab="gallery"><span class="tab-label"><span class="tab-long">Gallery</span><span class="tab-short">Gallery</span></span></button>
         <button type="button" class="tab" role="tab" id="tabbtn-enquiry" aria-controls="tab-enquiry" aria-selected="false" tabindex="-1" data-tab="enquiry"><span class="tab-label"><span class="tab-long">Enquiries</span><span class="tab-short">Enquiries</span></span></button>
         <button type="button" class="tab" role="tab" id="tabbtn-about" aria-controls="tab-about" aria-selected="false" tabindex="-1" data-tab="about"><span class="tab-label"><span class="tab-long">Our Story</span><span class="tab-short">Story</span></span></button>
@@ -1035,8 +1058,11 @@
   // Left/Right arrow keys move between tabs
   document.querySelector('.tabbar').addEventListener('keydown', (e) => {
     if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
-    const current = BAR_TABS.findIndex((t) => document.getElementById('tabbtn-' + t).classList.contains('is-active'));
-    const next = BAR_TABS[(current + (e.key === 'ArrowRight' ? 1 : BAR_TABS.length - 1)) % BAR_TABS.length];
+    // only the tabs that are actually showing (on a phone, three of them live in the menu instead)
+    const shown = BAR_TABS.filter((t) => document.getElementById('tabbtn-' + t).offsetParent !== null);
+    let current = shown.findIndex((t) => document.getElementById('tabbtn-' + t).classList.contains('is-active'));
+    if (current < 0) current = 0;
+    const next = shown[(current + (e.key === 'ArrowRight' ? 1 : shown.length - 1)) % shown.length];
     showTab(next);
     document.getElementById('tabbtn-' + next).focus();
   });
