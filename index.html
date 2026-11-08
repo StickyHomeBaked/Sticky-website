@@ -319,6 +319,10 @@
   }
   input:focus, select:focus, textarea:focus{ border-bottom-color:var(--teal); }
   textarea{resize:vertical; min-height:88px;}
+  /* Date field: short, so the calendar opens right under it (not off to the right),
+     and clicking anywhere on it opens the calendar */
+  input[type="date"]{ width:210px; max-width:100%; position:relative; cursor:pointer; justify-self:start; }
+  input[type="date"]::-webkit-calendar-picker-indicator{ position:absolute; inset:0; width:100%; height:100%; opacity:0; cursor:pointer; }
   .two-col{display:grid; grid-template-columns:1fr 1fr; gap:20px;}
   @media (max-width:560px){ .two-col{grid-template-columns:1fr;} }
   .checkbox-row{ display:flex; gap:26px; flex-wrap:wrap; margin-top:4px; }
@@ -330,6 +334,10 @@
   .checkbox-option input{ width:16px; height:16px; accent-color:var(--teal); cursor:pointer; }
   form .btn{cursor:pointer; justify-self:start; margin-top:6px;}
   .form-note{font-size:0.8rem; color:var(--ink-soft);}
+  .enq-msg{margin-top:14px; padding:14px 18px; border-radius:8px; font-size:1rem; font-weight:500; line-height:1.4;}
+  .enq-msg:empty{display:none;}
+  .enq-msg.ok{background:#E3F4F1; color:#0B5F5A; border:1px solid #00AEB7;}
+  .enq-msg.err{background:#FBEAEA; color:#8A1F1F; border:1px solid #D98A8A;}
   .cart-line{ padding-top:8px; margin-top:0; font-size:1.05rem; }
   .cart-total{ border-top:1px solid var(--line); margin-top:10px; padding-top:12px; font-size:1.3rem; }
   .cart-item-min{ color:var(--gold); font-size:0.78rem; margin-top:2px; }
@@ -910,7 +918,7 @@
           <input id="enqWebsite" name="website" type="text" tabindex="-1" autocomplete="off">
         </div>
         <button class="btn btn-solid" type="submit" id="enqSubmit">Send enquiry</button>
-        <p class="form-note" id="enqStatus" role="status"></p>
+        <p class="enq-msg" id="enqStatus" role="status"></p>
       </form>
 
         <div class="faq" id="faq">
@@ -947,11 +955,6 @@
           <p>We don't do fondant. There's no airbrushing, no sugar flowers, and no cake that takes three days to decorate before anyone's tasted a bite.</p>
           <p>Every order is still mixed by hand in small batches using real ingredients — nothing fake, nothing artificial. Because the whole point is the taste: that simple, comforting feeling of biting into a warm, fresh home-baked cake — not a showpiece...</p>
           <p>Just good cake, made properly, and meant to be eaten.</p>
-          <div class="stat-row">
-            <div class="stat"><b>6+</b><span>Years baking to order</span></div>
-            <div class="stat"><b>30</b><span>Cakes made per week, max</span></div>
-            <div class="stat"><b>0</b><span>Shortcuts taken</span></div>
-          </div>
         </div>
       </div>
     
@@ -1138,6 +1141,10 @@
     return d.toISOString().slice(0, 10);
   }
   document.getElementById('dateNeeded').min = earliestOrderDate();
+  // open the calendar when the date field is clicked anywhere (it then appears under the field)
+  document.getElementById('dateNeeded').addEventListener('click', function () {
+    try { if (this.showPicker) this.showPicker(); } catch (e) {}
+  });
 
   // ---------- Pickup / delivery toggle (one choice for the whole order) ----------
   document.querySelectorAll('input[name="fulfilment"]').forEach((radio) => {
@@ -1631,6 +1638,7 @@
     const form = e.target;
 
     status.textContent = '';
+    status.className = 'enq-msg';
     btn.disabled = true;
     const originalLabel = btn.textContent;
     btn.textContent = 'Sending…';
@@ -1649,14 +1657,18 @@
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
+        status.className = 'enq-msg err';
         status.textContent = data.error || 'Sorry, something went wrong. Please try again or email us directly.';
       } else {
-        status.textContent = "Thanks! Your message has been sent — we'll reply by email soon.";
+        status.className = 'enq-msg ok';
+        status.textContent = "✓ Your message has been sent. Thank you — we'll reply by email soon.";
         form.reset();
       }
     } catch (err) {
+      status.className = 'enq-msg err';
       status.textContent = 'Could not send your message. Please try again, or email stickyhomebaked@gmail.com directly.';
     }
+    status.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 
     btn.disabled = false;
     btn.textContent = originalLabel;
