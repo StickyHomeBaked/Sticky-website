@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sticky Date Cake Sydney | Sticky Home Baked Goodness</title>
+<meta name="description" content="Handmade sticky date cakes in Sydney with butterscotch sauce and fresh cream. Four versions from A$80. Pickup in Neutral Bay or delivery.">
+<link rel="canonical" href="https://www.stickyhomebakedgoodness.com.au/sticky-date-cake-sydney">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="theme-color" content="#00AEB7">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Sticky Home Baked Goodness">
+<meta property="og:locale" content="en_AU">
+<meta property="og:url" content="https://www.stickyhomebakedgoodness.com.au/sticky-date-cake-sydney">
+<meta property="og:title" content="Sticky Date Cake Sydney | Sticky Home Baked Goodness">
+<meta property="og:description" content="Handmade sticky date cakes in Sydney with butterscotch sauce and fresh cream. Four versions from A$80. Pickup in Neutral Bay or delivery.">
+<meta property="og:image" content="https://www.stickyhomebakedgoodness.com.au/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Sticky Date Cake Sydney | Sticky Home Baked Goodness">
+<meta name="twitter:description" content="Handmade sticky date cakes in Sydney with butterscotch sauce and fresh cream. Four versions from A$80. Pickup in Neutral Bay or delivery.">
+<meta name="twitter:image" content="https://www.stickyhomebakedgoodness.com.au/og-image.jpg">
+<link rel="icon" href="/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600;1,700&family=Lora:wght@700&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/pages.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://www.stickyhomebakedgoodness.com.au/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Sticky date cake Sydney",
+      "item": "https://www.stickyhomebakedgoodness.com.au/sticky-date-cake-sydney"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How much is a sticky date cake?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The Original is A$80. The Nutty, Spiced and Crumble versions are A$87. Whole cakes serve 8 to 10 people. You can add extra butterscotch sauce (+A$20) or extra fresh whipped cream (+A$15)."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How many people does a sticky date cake serve?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Our whole cakes serve 8 to 10 people. For individual servings, choose Mini Sticky Date Cakes (A$8 each, minimum order of 10) or a Gift Box with one generous slice (A$15)."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do you make gluten-free or dairy-free sticky date cake?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Gluten Free and Dairy Free options are available on our Sticky Date Cakes and Mini Sticky Date Cakes. Choose one when you add the cake to your cart. Our cakes are made in a home kitchen where gluten, dairy, nuts and other allergens are used, so we can't guarantee any cake is completely free of allergens. Please tell us about any allergies in your order notes."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I get extra butterscotch sauce?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Choose extra butterscotch sauce (+A$20), extra fresh whipped cream (+A$15) or both (+A$35) from the dropdown on each Sticky Date Cake."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do you deliver sticky date cake in Sydney?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. We deliver within 30 km of Neutral Bay. Delivery starts at A$10 and the fee for your address is shown before you pay. Pickup from Neutral Bay is free. Order by 3pm for next-day orders."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is a sticky date cake?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A sticky date cake, also known as sticky date pudding, is a soft, moist cake made with dates and covered in butterscotch sauce, usually served with cream. Ours is baked by hand to order in Neutral Bay, topped with rich butterscotch sauce and fresh whipped cream."
+      }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": "The Original Sticky Date Cake",
+  "description": "The Original Sticky Date Cake with butterscotch sauce and fresh whipped cream.",
+  "image": "https://www.stickyhomebakedgoodness.com.au/photos/sticky-date-original-light.jpg",
+  "brand": {
+    "@type": "Brand",
+    "name": "Sticky Home Baked Goodness"
+  },
+  "offers": {
+    "@type": "Offer",
+    "price": "80.00",
+    "priceCurrency": "AUD",
+    "availability": "https://schema.org/InStock",
+    "url": "https://www.stickyhomebakedgoodness.com.au/sticky-date-cake-sydney",
+    "seller": {
+      "@id": "https://www.stickyhomebakedgoodness.com.au/#business"
+    }
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": "Nutty Sticky Date Cake",
+  "description": "Nutty Sticky Date Cake topped with roasted pecans and hazelnuts, butterscotch sauce and fresh whipped cream.",
+  "image": "https://www.stickyhomebakedgoodness.com.au/photos/sticky-date-nutty.jpg",
+  "brand": {
+    "@type": "Brand",
+    "name": "Sticky Home Baked Goodness"
+  },
+  "offers": {
+    "@type": "Offer",
+    "price": "87.00",
+    "priceCurrency": "AUD",
+    "availability": "https://schema.org/InStock",
+    "url": "https://www.stickyhomebakedgoodness.com.au/sticky-date-cake-sydney",
+    "seller": {
+      "@id": "https://www.stickyhomebakedgoodness.com.au/#business"
+    }
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": "Spiced Sticky Date Cake",
+  "description": "Spiced Sticky Date Cake with hints of cinnamon, topped with spiced pears, butterscotch sauce and fresh whipped cream.",
+  "image": "https://www.stickyhomebakedgoodness.com.au/photos/spiced-pear.jpg",
+  "brand": {
+    "@type": "Brand",
+    "name": "Sticky Home Baked Goodness"
+  },
+  "offers": {
+    "@type": "Offer",
+    "price": "87.00",
+    "priceCurrency": "AUD",
+    "availability": "https://schema.org/InStock",
+    "url": "https://www.stickyhomebakedgoodness.com.au/sticky-date-cake-sydney",
+    "seller": {
+      "@id": "https://www.stickyhomebakedgoodness.com.au/#business"
+    }
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": "Crumble Sticky Date Cake",
+  "description": "Crumble Sticky Date Cake topped with apple and buttery crumble, butterscotch sauce and fresh whipped cream.",
+  "image": "https://www.stickyhomebakedgoodness.com.au/photos/crumble-sticky-date.jpg",
+  "brand": {
+    "@type": "Brand",
+    "name": "Sticky Home Baked Goodness"
+  },
+  "offers": {
+    "@type": "Offer",
+    "price": "87.00",
+    "priceCurrency": "AUD",
+    "availability": "https://schema.org/InStock",
+    "url": "https://www.stickyhomebakedgoodness.com.au/sticky-date-cake-sydney",
+    "seller": {
+      "@id": "https://www.stickyhomebakedgoodness.com.au/#business"
+    }
+  }
+}
+</script>
+</head>
+<body>
+<header class="top"><div class="top-in">
+  <a class="brand" href="/" aria-label="Sticky Home Baked Goodness home"><img src="/logo.png" alt="Sticky Home Baked Goodness logo" width="56" height="56"><span>Sticky Home<br>Baked Goodness</span></a>
+  <nav aria-label="Main"><a class="nl" href="/cake-delivery-sydney">Cake delivery Sydney</a><a class="nl" href="/sticky-date-cake-sydney">Sticky date cake</a><a class="btn" href="/#menu">Order online</a></nav>
+</div></header>
+<main>
+<div class="wrap crumbs"><a href="/">Home</a> &rsaquo; Sticky date cake Sydney</div>
+<section class="hero"><div class="wrap hero-grid">
+  <div>
+    <div class="eyebrow">Our signature cake</div>
+    <h1>Sticky date cake, made to order in Sydney</h1>
+    <p class="lede">A moist date cake with rich butterscotch sauce and fresh whipped cream, baked by hand to order in Neutral Bay. Choose from four versions, then collect it from us or have it delivered across Sydney.</p>
+    <div class="actions"><a class="btn" href="/#menu">Order online</a><a class="btn alt" href="/#enquiry">Send an enquiry</a></div>
+  </div>
+  <div class="hero-img"><img src="/photos/sticky-date-original-light.jpg" alt="The Original Sticky Date Cake with butterscotch sauce" width="800" height="600"></div>
+</div></section>
+<section class="s"><div class="wrap">
+  <h2>Four versions of our signature cake</h2>
+  <p>Every sticky date cake is baked by hand in small batches, then finished with rich butterscotch sauce and fresh whipped cream. Whole cakes serve 8 to 10.</p>
+  <div class="cols">
+    <div class="card">
+        <img src="/photos/sticky-date-original-light.jpg" alt="The Original Sticky Date Cake with butterscotch sauce" loading="lazy" decoding="async">
+        <h3>The Original Sticky Date Cake</h3>
+        <div class="price">A$80</div>
+        <p>The Original Sticky Date Cake with butterscotch sauce and fresh whipped cream.</p>
+        <a href="/#menu">Order online &rarr;</a>
+      </div>
+    <div class="card">
+        <img src="/photos/sticky-date-nutty.jpg" alt="Nutty Sticky Date Cake topped with roasted pecans and hazelnuts" loading="lazy" decoding="async">
+        <h3>Nutty Sticky Date Cake</h3>
+        <div class="price">A$87</div>
+        <p>Nutty Sticky Date Cake topped with roasted pecans and hazelnuts, butterscotch sauce and fresh whipped cream.</p>
+        <a href="/#menu">Order online &rarr;</a>
+      </div>
+    <div class="card">
+        <img src="/photos/spiced-pear.jpg" alt="Spiced Sticky Date Cake topped with spiced pears and whipped cream" loading="lazy" decoding="async">
+        <h3>Spiced Sticky Date Cake</h3>
+        <div class="price">A$87</div>
+        <p>Spiced Sticky Date Cake with hints of cinnamon, topped with spiced pears, butterscotch sauce and fresh whipped cream.</p>
+        <a href="/#menu">Order online &rarr;</a>
+      </div>
+    <div class="card">
+        <img src="/photos/crumble-sticky-date.jpg" alt="Crumble Sticky Date Cake with a golden crumble topping and butterscotch sauce" loading="lazy" decoding="async">
+        <h3>Crumble Sticky Date Cake</h3>
+        <div class="price">A$87</div>
+        <p>Crumble Sticky Date Cake topped with apple and buttery crumble, butterscotch sauce and fresh whipped cream.</p>
+        <a href="/#menu">Order online &rarr;</a>
+      </div>
+  </div>
+</div></section>
+<section class="s tint"><div class="wrap">
+  <h2>Make it extra sticky</h2>
+  <p>Add extras to any Sticky Date Cake from the dropdown when you order:</p>
+  <ul class="tick">
+    <li>Extra butterscotch sauce, +A$20</li>
+    <li>Extra fresh whipped cream, +A$15</li>
+    <li>Both extras, +A$35</li>
+  </ul>
+</div></section>
+<section class="s"><div class="wrap">
+  <h2>Individual sizes for dinner parties</h2>
+  <p>Our Mini Sticky Date Cakes are the signature cake baked as individual-sized cakes, with butterscotch sauce and fresh cream. They are A$8 each with a minimum order of 10. For a single serve, a Gift Box with one generous slice of cake is A$15.</p>
+  <p><a href="/#desserts">See Dinner Party Desserts &rarr;</a></p>
+</div></section>
+<section class="s tint"><div class="wrap">
+  <h2>Gluten free and dairy free options</h2>
+  <p>Gluten Free and Dairy Free options are available on our Sticky Date Cakes and Mini Sticky Date Cakes. Choose one when you add your cake to the cart. Our cakes are made in a home kitchen where gluten, dairy, nuts and other allergens are used, so we can't guarantee any cake is completely free of allergens. Please tell us about any allergies in your order notes.</p>
+</div></section>
+<section class="s"><div class="wrap">
+  <h2>Pickup or delivery across Sydney</h2>
+  <p>Collect your cake from Neutral Bay for free, or have it delivered within 30 km, with delivery from A$10. Order by 3pm (Sydney time) for next-day pickup or delivery. After 3pm, the earliest date is the day after tomorrow. Custom cakes need at least 72 hours&rsquo; notice.</p>
+  <p><a href="/cake-delivery-sydney">See delivery fees and areas &rarr;</a></p>
+</div></section>
+<section class="s"><div class="wrap">
+  <h2>Common questions</h2>
+  <details class="q"><summary>How much is a sticky date cake?</summary><p>The Original is A$80. The Nutty, Spiced and Crumble versions are A$87. Whole cakes serve 8 to 10 people. You can add extra butterscotch sauce (+A$20) or extra fresh whipped cream (+A$15).</p></details>
+<details class="q"><summary>How many people does a sticky date cake serve?</summary><p>Our whole cakes serve 8 to 10 people. For individual servings, choose Mini Sticky Date Cakes (A$8 each, minimum order of 10) or a Gift Box with one generous slice (A$15).</p></details>
+<details class="q"><summary>Do you make gluten-free or dairy-free sticky date cake?</summary><p>Yes. Gluten Free and Dairy Free options are available on our Sticky Date Cakes and Mini Sticky Date Cakes. Choose one when you add the cake to your cart. Our cakes are made in a home kitchen where gluten, dairy, nuts and other allergens are used, so we can't guarantee any cake is completely free of allergens. Please tell us about any allergies in your order notes.</p></details>
+<details class="q"><summary>Can I get extra butterscotch sauce?</summary><p>Yes. Choose extra butterscotch sauce (+A$20), extra fresh whipped cream (+A$15) or both (+A$35) from the dropdown on each Sticky Date Cake.</p></details>
+<details class="q"><summary>Do you deliver sticky date cake in Sydney?</summary><p>Yes. We deliver within 30 km of Neutral Bay. Delivery starts at A$10 and the fee for your address is shown before you pay. Pickup from Neutral Bay is free. Order by 3pm for next-day orders.</p></details>
+<details class="q"><summary>What is a sticky date cake?</summary><p>A sticky date cake, also known as sticky date pudding, is a soft, moist cake made with dates and covered in butterscotch sauce, usually served with cream. Ours is baked by hand to order in Neutral Bay, topped with rich butterscotch sauce and fresh whipped cream.</p></details>
+</div></section>
+<section class="s tint"><div class="wrap">
+  <h2>More from Sticky Home Baked Goodness</h2>
+  <div class="related"><a href="/cake-delivery-sydney">Cake delivery Sydney<small>Fees, areas and how ordering works</small></a><a href="/cakes-neutral-bay">Cakes Neutral Bay<small>Our home bakery and free pickup</small></a><a href="/cakes-north-shore">North Shore delivery<small>Mosman, North Sydney, Chatswood and more</small></a><a href="/christmas-desserts-sydney">Christmas desserts<small>Christmas Pudding Minis and festive desserts</small></a></div>
+</div></section>
+<section class="cta"><div class="wrap">
+  <h2>Ready to order?</h2>
+  <p>Baked to order in Neutral Bay. Pickup is free, and delivery across Sydney starts at A$10.</p>
+  <div class="actions" style="justify-content:center"><a class="btn" href="/#menu">Order online</a><a class="btn alt" href="tel:0403207894">Call 0403 207 894</a></div>
+</div></section>
+</main>
+<footer class="ft"><div class="wrap">
+  <div><strong>Sticky Home Baked Goodness</strong><br>Home bakery, Neutral Bay, Sydney<br><a href="mailto:stickyhomebaked@gmail.com">stickyhomebaked@gmail.com</a> &middot; <a href="tel:0403207894">0403 207 894</a></div>
+  <div class="links"><a href="/">Home</a><a href="/cake-delivery-sydney">Cake delivery Sydney</a><a href="/sticky-date-cake-sydney">Sticky date cake</a><a href="/cakes-neutral-bay">Cakes Neutral Bay</a><a href="/cakes-north-shore">North Shore delivery</a><a href="/christmas-desserts-sydney">Christmas desserts</a></div>
+</div></footer>
+</body>
+</html>
