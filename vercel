@@ -1,0 +1,9 @@
+{
+  "rewrites": [
+    { "source": "/cake-delivery-sydney", "destination": "/cake-delivery-sydney.html" },
+    { "source": "/cakes-neutral-bay", "destination": "/cakes-neutral-bay.html" },
+    { "source": "/cakes-north-shore", "destination": "/cakes-north-shore.html" },
+    { "source": "/sticky-date-cake-sydney", "destination": "/sticky-date-cake-sydney.html" },
+    { "source": "/christmas-desserts-sydney", "destination": "/christmas-desserts-sydney.html" }
+  ]
+}
