@@ -6,6 +6,7 @@
 // connection.
 
 import crypto from 'crypto';
+import { scheduleReviewRequest } from '../lib/review-email.js';
 
 const SQUARE_ENVIRONMENT = process.env.SQUARE_ENVIRONMENT || 'sandbox';
 const SQUARE_BASE_URL =
@@ -82,6 +83,9 @@ export default async function handler(req, res) {
     const order = payment.order_id ? await fetchOrderDetails(payment.order_id) : null;
     await notifyOwnerOfPaidOrder(payment, order);
     console.log('Order-confirmed email attempted for payment', payment.id);
+    // A thank-you + Google review email to the customer, sent a couple of days
+    // after their cake date. Does nothing unless CUSTOMER_EMAIL_FROM is set.
+    await scheduleReviewRequest(payment, order);
   }
 
   // Square just needs a 200 response to know we received it.
