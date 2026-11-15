@@ -1,0 +1,44 @@
+{
+  "rewrites": [
+    {
+      "source": "/cake-delivery-sydney",
+      "destination": "/cake-delivery-sydney.html"
+    },
+    {
+      "source": "/cakes-neutral-bay",
+      "destination": "/cakes-neutral-bay.html"
+    },
+    {
+      "source": "/cakes-north-shore",
+      "destination": "/cakes-north-shore.html"
+    },
+    {
+      "source": "/sticky-date-cake-sydney",
+      "destination": "/sticky-date-cake-sydney.html"
+    },
+    {
+      "source": "/christmas-desserts-sydney",
+      "destination": "/christmas-desserts-sydney.html"
+    },
+    {
+      "source": "/cake-delivery-eastern-suburbs",
+      "destination": "/cake-delivery-eastern-suburbs.html"
+    },
+    {
+      "source": "/cake-delivery-inner-west",
+      "destination": "/cake-delivery-inner-west.html"
+    },
+    {
+      "source": "/birthday-cakes-sydney",
+      "destination": "/birthday-cakes-sydney.html"
+    },
+    {
+      "source": "/gluten-free-cakes-sydney",
+      "destination": "/gluten-free-cakes-sydney.html"
+    },
+    {
+      "source": "/corporate-gifts-sydney",
+      "destination": "/corporate-gifts-sydney.html"
+    }
+  ]
+}
