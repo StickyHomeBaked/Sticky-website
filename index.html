@@ -809,6 +809,15 @@
             <div class="price-row"><div class="price">A$15</div><button type="button" class="add-cart-btn" data-name="Gift Box" data-price="15">Add to Cart</button></div>
           </div>
         </div>
+        <div id="giftcertificates">
+          <h3 class="menu-group-title">Gift Cards</h3>
+          <p class="menu-group-note">Digital gift cards, emailed to the recipient by Square</p>
+          <div class="menu-item">
+            <div class="menu-thumb"><img src="photos/gift-card.jpg" alt="Sticky Home Baked Goodness gift card" loading="lazy" decoding="async"></div>
+            <div><h3>Sticky Gift Card</h3><p>Give the gift of something sweet. Choose an amount and send it by email, and the recipient redeems it with us when they order. You'll pay on Square's secure gift card page.</p></div>
+            <div class="price-row"><div class="price">Choose your amount</div><a class="btn btn-solid" href="https://app.squareup.com/gift/MLWCYF0XBMT29/order" target="_blank" rel="noopener">Buy a gift card</a></div>
+          </div>
+        </div>
       </div>
         <p class="tab-note">Planning something bigger? Custom cakes for events are always welcome — <a href="#enquiry">send us an enquiry</a>.</p>
         <div class="tabnav">
@@ -1136,6 +1145,7 @@
         <a href="#cakes">The Cake Collection</a>
         <a href="#desserts">Dinner Party Desserts</a>
         <a href="#extras">Finishing Touches</a>
+        <a href="#giftcertificates">Gift Cards</a>
         <a href="#gallery">Gallery</a>
         <a href="#enquiry">Enquiries</a>
         <a href="#about">Our Story</a>
@@ -1148,12 +1158,18 @@
         <a href="/cakes-neutral-bay">Cakes Neutral Bay</a>
         <a href="/cakes-north-shore">North Shore delivery</a>
         <a href="/christmas-desserts-sydney">Christmas desserts</a>
+        <a href="/cake-delivery-eastern-suburbs">Eastern Suburbs delivery</a>
+        <a href="/cake-delivery-inner-west">Inner West delivery</a>
+        <a href="/birthday-cakes-sydney">Birthday cakes</a>
+        <a href="/gluten-free-cakes-sydney">Gluten free cakes</a>
+        <a href="/corporate-gifts-sydney">Corporate gifts</a>
       </div>
       <div class="footer-col">
         <h4 class="eyebrow">Contact</h4>
         <a href="mailto:stickyhomebaked@gmail.com">stickyhomebaked@gmail.com</a>
         <a href="tel:0403207894">0403 207 894</a>
         <span>Neutral Bay</span>
+        <a href="https://g.page/r/CZO7VSFhzRntEBM/review" target="_blank" rel="noopener">Review us on Google</a>
       </div>
     </div>
     <div class="footer-copy">© 2026 Sticky Home Baked Goodness</div>
@@ -1308,7 +1324,7 @@
 
   // ---------- Reliable in-page anchor scrolling ----------
   // Links like "See the menu" and "Order a cake" open the right tab.
-  const TAB_LINKS = { menu: 'sticky', cakes: 'more', desserts: 'desserts', extras: 'extras', gallery: 'gallery', enquiry: 'enquiry', enquiries: 'enquiry', about: 'about', story: 'about', review: 'review', faq: 'enquiry' };
+  const TAB_LINKS = { menu: 'sticky', cakes: 'more', giftcertificates: 'more', desserts: 'desserts', extras: 'extras', gallery: 'gallery', enquiry: 'enquiry', enquiries: 'enquiry', about: 'about', story: 'about', review: 'review', faq: 'enquiry' };
   document.querySelectorAll('a[href^="#"]').forEach(a => {
     a.addEventListener('click', function(e){
       const id = this.getAttribute('href').slice(1);
