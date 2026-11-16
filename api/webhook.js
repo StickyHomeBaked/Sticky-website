@@ -7,6 +7,7 @@
 
 import crypto from 'crypto';
 import { scheduleReviewRequest } from '../lib/review-email.js';
+import { sendOrderConfirmation } from '../lib/confirmation-email.js';
 
 const SQUARE_ENVIRONMENT = process.env.SQUARE_ENVIRONMENT || 'sandbox';
 const SQUARE_BASE_URL =
@@ -85,6 +86,7 @@ export default async function handler(req, res) {
     console.log('Order-confirmed email attempted for payment', payment.id);
     // A thank-you + Google review email to the customer, sent a couple of days
     // after their cake date. Does nothing unless CUSTOMER_EMAIL_FROM is set.
+    await sendOrderConfirmation(payment, order);
     await scheduleReviewRequest(payment, order);
   }
 
@@ -138,6 +140,8 @@ async function notifyOwnerOfPaidOrder(payment, order) {
     meta.customer_email ? `Email: ${meta.customer_email}` : null,
     meta.customer_phone ? `Phone: ${meta.customer_phone}` : null,
     meta.fulfilment_type ? `Fulfilment: ${meta.fulfilment_type}` : null,
+    meta.recipient_name ? `Send certificate to: ${meta.recipient_name}` : null,
+    meta.recipient_email ? `Recipient email: ${meta.recipient_email}` : null,
     meta.delivery_address ? `Address: ${meta.delivery_address}` : null,
     meta.date_needed ? `Date needed: ${meta.date_needed}` : null,
     meta.preferred_time ? `${timeLabel}: ${meta.preferred_time}` : null,
@@ -182,7 +186,7 @@ async function notifyOwnerOfPaidOrder(payment, order) {
       body: JSON.stringify({
         from: 'Sticky Home Baked Goodness <onboarding@resend.dev>',
         to: ['stickyhomebaked@gmail.com'],
-        subject: 'New paid order — Sticky Home Baked Goodness',
+        subject: String(meta.fulfilment_type || '').startsWith('Gift certificate') ? 'New paid GIFT CERTIFICATE order — Sticky Home Baked Goodness' : 'New paid order — Sticky Home Baked Goodness',
         text: lines.join('\n'),
       }),
     });
