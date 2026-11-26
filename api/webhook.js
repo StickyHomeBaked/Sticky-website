@@ -6,9 +6,17 @@
 // connection.
 
 import crypto from 'crypto';
-import { scheduleReviewRequest } from '../lib/review-email.js';
-import { sendOrderConfirmation } from '../lib/confirmation-email.js';
-import { addOrderToCalendar } from '../lib/calendar-event.js';
+
+// The extras (customer emails, calendar) are loaded on demand and wrapped so
+// that a missing or broken helper file can never stop YOUR order email.
+async function runExtra(loader, fn, ...args) {
+  try {
+    const mod = await loader();
+    await mod[fn](...args);
+  } catch (err) {
+    console.error(`Extra step ${fn} failed:`, err);
+  }
+}
 
 const SQUARE_ENVIRONMENT = process.env.SQUARE_ENVIRONMENT || 'sandbox';
 const SQUARE_BASE_URL =
@@ -87,9 +95,9 @@ export default async function handler(req, res) {
     console.log('Order-confirmed email attempted for payment', payment.id);
     // A thank-you + Google review email to the customer, sent a couple of days
     // after their cake date. Does nothing unless CUSTOMER_EMAIL_FROM is set.
-    await sendOrderConfirmation(payment, order);
-    await addOrderToCalendar(payment, order);
-    await scheduleReviewRequest(payment, order);
+    await runExtra(() => import('../lib/confirmation-email.js'), 'sendOrderConfirmation', payment, order);
+    await runExtra(() => import('../lib/calendar-event.js'), 'addOrderToCalendar', payment, order);
+    await runExtra(() => import('../lib/review-email.js'), 'scheduleReviewRequest', payment, order);
   }
 
   // Square just needs a 200 response to know we received it.
