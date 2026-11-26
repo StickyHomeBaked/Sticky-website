@@ -8,6 +8,7 @@
 import crypto from 'crypto';
 import { scheduleReviewRequest } from '../lib/review-email.js';
 import { sendOrderConfirmation } from '../lib/confirmation-email.js';
+import { addOrderToCalendar } from '../lib/calendar-event.js';
 
 const SQUARE_ENVIRONMENT = process.env.SQUARE_ENVIRONMENT || 'sandbox';
 const SQUARE_BASE_URL =
@@ -87,6 +88,7 @@ export default async function handler(req, res) {
     // A thank-you + Google review email to the customer, sent a couple of days
     // after their cake date. Does nothing unless CUSTOMER_EMAIL_FROM is set.
     await sendOrderConfirmation(payment, order);
+    await addOrderToCalendar(payment, order);
     await scheduleReviewRequest(payment, order);
   }
 
